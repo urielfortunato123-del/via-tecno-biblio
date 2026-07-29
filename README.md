@@ -866,15 +866,10 @@ Todo o código deve seguir boas práticas, ser componentizado, reutilizável, do
 
 O resultado final deve parecer um software corporativo utilizado por concessionárias, DER, DNIT, ARTESP e empresas de engenharia, e não apenas um leitor de PDFs.
 
-This project was built with [Lovable](https://lovable.dev).
+## Via Norma – Assistente Técnico de Campo
 
-## Build with Lovable
+Sistema profissional de fiscalização rodoviária com Biblioteca Técnica Offline, inspeções de campo, checklists automáticos, relatórios em PDF e consulta ao Manual SMR.
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/7f8aac09-f82a-4b14-9696-27d42a786513).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
 
 ## Development
 
