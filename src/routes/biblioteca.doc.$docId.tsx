@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PdfViewer } from "@/components/biblioteca/PdfViewer";
-import { Star, ArrowLeft } from "lucide-react";
+import { Star, ArrowLeft, Download, Share2 } from "lucide-react";
 import { toast } from "sonner";
 
 const searchSchema = z.object({
@@ -25,8 +25,8 @@ function DocViewerPage() {
   const navigate = useNavigate();
   const [doc, setDoc] = useState<DocRecord | null>(null);
   const [blob, setBlob] = useState<Blob | null>(null);
-  const [pageText, setPageText] = useState<string>("");
   const [notFound, setNotFound] = useState(false);
+  const [currentPage, setCurrentPage] = useState(page);
 
   useEffect(() => {
     let alive = true;
@@ -42,14 +42,58 @@ function DocViewerPage() {
       const b = await db.blobs.get(id);
       if (!alive) return;
       setBlob(b?.blob ?? null);
-      const pg = await db.pages.where({ docId: id, page }).first();
-      if (!alive) return;
-      setPageText(pg?.text ?? "");
     })();
     return () => {
       alive = false;
     };
-  }, [docId, page]);
+  }, [docId]);
+
+  const isPdf =
+    doc?.mime === "application/pdf" || doc?.fileName.toLowerCase().endsWith(".pdf");
+
+  const handleDownload = () => {
+    if (!blob || !doc) return;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = doc.fileName || `${doc.nome}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+
+  const handleShare = async () => {
+    if (!doc) return;
+    const shareData: ShareData = {
+      title: doc.nome,
+      text: `${doc.nome}${doc.orgao ? " · " + doc.orgao : ""} — página ${currentPage}`,
+      url: typeof window !== "undefined" ? window.location.href : undefined,
+    };
+    try {
+      if (blob && typeof navigator !== "undefined" && "canShare" in navigator) {
+        const file = new File([blob], doc.fileName || `${doc.nome}.pdf`, {
+          type: doc.mime || "application/pdf",
+        });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const nav = navigator as any;
+        if (nav.canShare?.({ files: [file] })) {
+          await nav.share({ ...shareData, files: [file] });
+          return;
+        }
+      }
+      if (typeof navigator !== "undefined" && "share" in navigator) {
+        await navigator.share(shareData);
+        return;
+      }
+      if (shareData.url) {
+        await navigator.clipboard.writeText(shareData.url);
+        toast.success("Link copiado");
+      }
+    } catch {
+      /* user cancelled */
+    }
+  };
 
   if (notFound) {
     return (
@@ -66,53 +110,82 @@ function DocViewerPage() {
     return <div className="text-sm text-muted-foreground">Carregando…</div>;
   }
 
-  const isPdf = doc.mime === "application/pdf" || doc.fileName.toLowerCase().endsWith(".pdf");
-
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <Button variant="outline" size="sm" asChild>
-          <Link to="/biblioteca/documentos">
-            <ArrowLeft className="mr-1 h-3 w-3" /> Voltar
-          </Link>
-        </Button>
-        <h2 className="text-lg font-semibold">{doc.nome}</h2>
-        <Badge variant="secondary">{doc.categoria}</Badge>
-        {doc.orgao && <Badge variant="outline">{doc.orgao}</Badge>}
-        {doc.ano && <Badge variant="outline">{doc.ano}</Badge>}
-        <Badge variant={doc.status === "vigente" ? "default" : "secondary"}>{doc.status}</Badge>
-        <Button
-          size="sm"
-          variant="outline"
-          className="ml-auto"
-          onClick={async () => {
-            await db.favorites.add({
-              docId: doc.id!,
-              page,
-              createdAt: Date.now(),
-            });
-            toast.success("Adicionado aos favoritos");
-          }}
-        >
-          <Star className="mr-1 h-3 w-3" /> Favoritar
-        </Button>
-      </div>
-
-      <div className="text-xs text-muted-foreground">
-        Fonte: {doc.nome}
-        {doc.orgao ? ` · ${doc.orgao}` : ""}
-        {doc.ano ? ` · ${doc.ano}` : ""}
-        {doc.versao ? ` · v${doc.versao}` : ""} · página {page} de {doc.numPages}
+    <div className="flex min-w-0 flex-col gap-3">
+      {/* Header dedicado */}
+      <div className="flex min-w-0 flex-col gap-2 rounded-md border bg-card p-3">
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
+          <Button variant="outline" size="sm" asChild>
+            <Link to="/biblioteca/documentos">
+              <ArrowLeft className="mr-1 h-3 w-3" /> Voltar
+            </Link>
+          </Button>
+          <h2 className="min-w-0 flex-1 truncate text-base font-semibold sm:text-lg">
+            {doc.nome}
+          </h2>
+        </div>
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
+          <Badge variant="secondary">{doc.categoria}</Badge>
+          {doc.orgao && <Badge variant="outline">{doc.orgao}</Badge>}
+          {doc.ano && <Badge variant="outline">{doc.ano}</Badge>}
+          <Badge variant={doc.status === "vigente" ? "default" : "secondary"}>
+            {doc.status}
+          </Badge>
+          <div className="ml-auto flex flex-wrap items-center gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={async () => {
+                await db.favorites.add({
+                  docId: doc.id!,
+                  page: currentPage,
+                  createdAt: Date.now(),
+                });
+                toast.success("Adicionado aos favoritos");
+              }}
+            >
+              <Star className="mr-1 h-3 w-3" /> Favoritar
+            </Button>
+            <Button size="sm" variant="outline" onClick={handleShare}>
+              <Share2 className="mr-1 h-3 w-3" /> Compartilhar
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleDownload}
+              disabled={!blob}
+              title={blob ? "Baixar PDF" : "PDF ainda não disponível offline"}
+            >
+              <Download className="mr-1 h-3 w-3" /> Baixar
+            </Button>
+          </div>
+        </div>
+        <div className="min-w-0 text-xs text-muted-foreground">
+          Fonte: {doc.nome}
+          {doc.orgao ? ` · ${doc.orgao}` : ""}
+          {doc.ano ? ` · ${doc.ano}` : ""}
+          {doc.versao ? ` · v${doc.versao}` : ""} · página {currentPage} de {doc.numPages}
+        </div>
       </div>
 
       {isPdf && blob ? (
-        <PdfViewer blob={blob} initialPage={page} highlight={q} />
+        <PdfViewer
+          blob={blob}
+          initialPage={page}
+          highlight={q}
+          onPageChange={setCurrentPage}
+        />
+      ) : isPdf && !blob ? (
+        <Card className="p-6 text-sm">
+          <p className="mb-2 font-medium">PDF ainda não disponível offline</p>
+          <p className="text-muted-foreground">
+            Aguarde o término do download do documento ou verifique a página de administração
+            da Biblioteca.
+          </p>
+        </Card>
       ) : (
-        <Card className="p-4">
-          <h3 className="mb-2 text-sm font-medium">Página {page}</h3>
-          <pre className="whitespace-pre-wrap break-words text-sm leading-relaxed">
-            {pageText || "(sem texto)"}
-          </pre>
+        <Card className="p-6 text-sm text-muted-foreground">
+          Este documento não é um PDF.
         </Card>
       )}
     </div>
