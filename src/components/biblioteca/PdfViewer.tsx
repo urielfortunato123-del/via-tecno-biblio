@@ -7,8 +7,12 @@ import {
   ZoomIn,
   ZoomOut,
   Maximize2,
+  Minimize2,
+  ArrowLeft,
+  Scan,
   StretchHorizontal,
 } from "lucide-react";
+
 
 interface Props {
   blob: Blob;
