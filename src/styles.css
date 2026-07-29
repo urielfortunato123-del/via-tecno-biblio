@@ -165,6 +165,22 @@
     max-width: 100%;
     height: auto;
   }
+
+  /*
+   * Garante que campos focados fiquem visíveis quando o teclado virtual abre
+   * (o browser rola o elemento para dentro do visualViewport). O offset
+   * compensa o header sticky (h-12 = 3rem) + folga; o bottom cobre botões
+   * de ação abaixo do campo (ex.: "Buscar", "Salvar").
+   */
+  input,
+  textarea,
+  select,
+  [contenteditable="true"],
+  [role="combobox"],
+  [role="textbox"] {
+    scroll-margin-top: 4rem;
+    scroll-margin-bottom: 4rem;
+  }
 }
 
 @media (max-width: 640px) {

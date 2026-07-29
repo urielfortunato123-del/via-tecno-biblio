@@ -81,7 +81,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" },
       { name: "theme-color", content: "#0f172a" },
       { name: "application-name", content: "Via Norma" },
       { name: "apple-mobile-web-app-title", content: "Via Norma" },
@@ -153,7 +153,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <InspectionProvider>
         <SidebarProvider>
-          <div className="flex min-h-screen w-full min-w-0 max-w-full overflow-x-hidden">
+          <div className="flex min-h-[100dvh] w-full min-w-0 max-w-full overflow-x-hidden">
             <AppSidebar />
             <div className="flex min-w-0 flex-1 flex-col">
               <header className="sticky top-0 z-20 flex h-12 items-center gap-2 border-b bg-background/80 backdrop-blur px-3 pt-[env(safe-area-inset-top)] pl-[max(env(safe-area-inset-left),0.75rem)] pr-[max(env(safe-area-inset-right),0.75rem)]">
