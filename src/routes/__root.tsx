@@ -15,6 +15,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { SmrBootstrap } from "@/components/SmrBootstrap";
+import { InstallPwaPrompt } from "@/components/InstallPwaPrompt";
 import { InspectionProvider } from "@/lib/biblioteca/inspection-context";
 
 function NotFoundComponent() {
