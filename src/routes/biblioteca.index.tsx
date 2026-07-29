@@ -87,9 +87,9 @@ function SearchPage() {
               inputMode="search"
             />
           </div>
-          <div className="flex gap-2">
+          <div className="flex min-w-0 gap-2">
             <Select value={categoria} onValueChange={setCategoria}>
-              <SelectTrigger className="w-full sm:w-56">
+              <SelectTrigger className="w-full min-w-0 sm:w-56">
                 <SelectValue placeholder="Categoria" />
               </SelectTrigger>
               <SelectContent>
