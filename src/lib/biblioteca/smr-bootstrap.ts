@@ -1,5 +1,7 @@
 import { db, type DocRecord } from "./db";
 import { invalidateIndex } from "./search";
+import { dedupeLibrary, findExistingDoc } from "./dedupe";
+
 
 export const SMR_SOURCE_KEY = "smr";
 const SMR_INDEX_VERSION_STORAGE = "smr-index-version";
