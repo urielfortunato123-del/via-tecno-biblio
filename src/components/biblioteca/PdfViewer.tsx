@@ -374,7 +374,7 @@ export function PdfViewer({ blob, initialPage = 1, highlight, onPageChange }: Pr
             title="Ajustar página inteira"
             aria-label="Ajustar página inteira"
           >
-            <Maximize2 className="h-4 w-4" />
+            <Scan className="h-4 w-4" />
           </Button>
           <Button
             size="sm"
@@ -401,10 +401,23 @@ export function PdfViewer({ blob, initialPage = 1, highlight, onPageChange }: Pr
           >
             <ZoomIn className="h-4 w-4" />
           </Button>
+          <Button
+            size="sm"
+            variant={fullscreen ? "default" : "outline"}
+            onClick={() => (fullscreen ? exitFullscreen() : enterFullscreen())}
+            title={fullscreen ? "Sair da tela cheia" : "Tela cheia"}
+            aria-label={fullscreen ? "Sair da tela cheia" : "Tela cheia"}
+          >
+            {fullscreen ? (
+              <Minimize2 className="h-4 w-4" />
+            ) : (
+              <Maximize2 className="h-4 w-4" />
+            )}
+          </Button>
         </div>
       </div>
 
-      {highlight && (
+      {highlight && !fullscreen && (
         <div className="rounded-md border bg-card p-3 text-sm">
           <div className="mb-1 text-xs font-medium uppercase text-muted-foreground">
             Trecho encontrado
@@ -418,7 +431,11 @@ export function PdfViewer({ blob, initialPage = 1, highlight, onPageChange }: Pr
       {/* Canvas viewport (virtualization: apenas página atual no DOM) */}
       <div
         ref={containerRef}
-        className="relative max-h-[78vh] min-h-[400px] w-full overflow-auto rounded-md border bg-muted/40 p-3 touch-pan-y"
+        className={
+          fullscreen
+            ? "relative min-h-0 w-full flex-1 overflow-auto rounded-md border bg-muted/40 p-2 touch-pan-y"
+            : "relative max-h-[78vh] min-h-[400px] w-full overflow-auto rounded-md border bg-muted/40 p-3 touch-pan-y"
+        }
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
@@ -430,6 +447,7 @@ export function PdfViewer({ blob, initialPage = 1, highlight, onPageChange }: Pr
         )}
         <canvas ref={canvasRef} className="mx-auto block bg-white shadow" />
       </div>
+
 
       <div className="text-center text-xs text-muted-foreground">
         Página {page} de {numPages || "…"}
