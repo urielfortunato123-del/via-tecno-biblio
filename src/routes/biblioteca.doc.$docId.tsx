@@ -82,12 +82,14 @@ function DocViewerPage() {
           return;
         }
       }
-      if (typeof navigator !== "undefined" && "share" in navigator) {
-        await navigator.share(shareData);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const navAny: any = typeof navigator !== "undefined" ? navigator : null;
+      if (navAny && typeof navAny.share === "function") {
+        await navAny.share(shareData);
         return;
       }
-      if (shareData.url && typeof navigator !== "undefined" && navigator.clipboard) {
-        await navigator.clipboard.writeText(shareData.url);
+      if (shareData.url && navAny?.clipboard?.writeText) {
+        await navAny.clipboard.writeText(shareData.url);
         toast.success("Link copiado");
       }
     } catch {
