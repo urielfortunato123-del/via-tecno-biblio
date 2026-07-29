@@ -98,7 +98,7 @@ async def find_search_input(page: Page):
     ]:
         loc = page.locator(sel).first
         try:
-            if await loc.count() > 0 and await loc.is_visible():
+            if await loc.count() > 0:
                 return loc
         except Exception:
             continue
