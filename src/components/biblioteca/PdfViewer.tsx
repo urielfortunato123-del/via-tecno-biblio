@@ -7,8 +7,12 @@ import {
   ZoomIn,
   ZoomOut,
   Maximize2,
+  Minimize2,
+  ArrowLeft,
+  Scan,
   StretchHorizontal,
 } from "lucide-react";
+
 
 interface Props {
   blob: Blob;
@@ -33,6 +37,7 @@ const MIN_SCALE = 0.4;
 const MAX_SCALE = 4;
 
 export function PdfViewer({ blob, initialPage = 1, highlight, onPageChange }: Props) {
+  const rootRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const renderTaskRef = useRef<{ cancel: () => void } | null>(null);
@@ -47,6 +52,75 @@ export function PdfViewer({ blob, initialPage = 1, highlight, onPageChange }: Pr
   const [pageText, setPageText] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loadingPage, setLoadingPage] = useState(false);
+  const [fullscreen, setFullscreen] = useState(false);
+  const savedScrollRef = useRef<{ top: number; left: number } | null>(null);
+
+  // Enter/exit fullscreen preserving page, zoom and scroll position.
+  const enterFullscreen = useCallback(() => {
+    const el = containerRef.current;
+    savedScrollRef.current = el
+      ? { top: el.scrollTop, left: el.scrollLeft }
+      : null;
+    setFullscreen(true);
+    if (typeof history !== "undefined") {
+      history.pushState({ pdfFullscreen: true }, "");
+    }
+    // Native Fullscreen API is only a progressive enhancement.
+    const root = rootRef.current;
+    if (root?.requestFullscreen) {
+      root.requestFullscreen().catch(() => {});
+    }
+  }, []);
+
+  const exitFullscreen = useCallback((fromPopstate = false) => {
+    setFullscreen(false);
+    if (typeof document !== "undefined" && document.fullscreenElement) {
+      document.exitFullscreen?.().catch(() => {});
+    }
+    if (!fromPopstate && typeof history !== "undefined") {
+      if (history.state?.pdfFullscreen) history.back();
+    }
+  }, []);
+
+  // Android back button / gesture closes fullscreen first.
+  useEffect(() => {
+    if (!fullscreen) return;
+    const onPop = () => exitFullscreen(true);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") exitFullscreen();
+    };
+    const onFsChange = () => {
+      if (!document.fullscreenElement && fullscreen) {
+        // native exit (system gesture) — keep internal overlay in sync
+      }
+    };
+    window.addEventListener("popstate", onPop);
+    window.addEventListener("keydown", onKey);
+    document.addEventListener("fullscreenchange", onFsChange);
+    return () => {
+      window.removeEventListener("popstate", onPop);
+      window.removeEventListener("keydown", onKey);
+      document.removeEventListener("fullscreenchange", onFsChange);
+    };
+  }, [fullscreen, exitFullscreen]);
+
+  // Restore scroll position after layout switches.
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const saved = savedScrollRef.current;
+    const id = requestAnimationFrame(() => {
+      if (saved) {
+        el.scrollTop = saved.top;
+        el.scrollLeft = saved.left;
+      }
+      savedScrollRef.current = el
+        ? { top: el.scrollTop, left: el.scrollLeft }
+        : null;
+    });
+    return () => cancelAnimationFrame(id);
+  }, [fullscreen]);
+
 
   // Open document once per blob.
   useEffect(() => {
@@ -218,9 +292,28 @@ export function PdfViewer({ blob, initialPage = 1, highlight, onPageChange }: Pr
   }
 
   return (
-    <div className="flex min-w-0 flex-col gap-3">
+    <div
+      ref={rootRef}
+      className={
+        fullscreen
+          ? "fixed inset-0 z-[100] flex min-w-0 flex-col gap-2 bg-background p-2 pt-[max(env(safe-area-inset-top),0.5rem)]"
+          : "flex min-w-0 flex-col gap-3"
+      }
+      style={fullscreen ? { width: "100%", height: "100%" } : undefined}
+    >
+      {fullscreen && (
+        <div className="flex min-w-0 items-center gap-2">
+          <Button size="sm" variant="default" onClick={() => exitFullscreen()}>
+            <ArrowLeft className="mr-1 h-4 w-4" /> Voltar
+          </Button>
+          <span className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
+            Página {page} de {numPages || "…"} · {Math.round(scale * 100)}%
+          </span>
+        </div>
+      )}
       {/* Toolbar */}
       <div className="flex min-w-0 flex-wrap items-center gap-2 rounded-md border bg-card p-2">
+
         <div className="flex items-center gap-1">
           <Button
             size="sm"
@@ -281,7 +374,7 @@ export function PdfViewer({ blob, initialPage = 1, highlight, onPageChange }: Pr
             title="Ajustar página inteira"
             aria-label="Ajustar página inteira"
           >
-            <Maximize2 className="h-4 w-4" />
+            <Scan className="h-4 w-4" />
           </Button>
           <Button
             size="sm"
@@ -308,10 +401,23 @@ export function PdfViewer({ blob, initialPage = 1, highlight, onPageChange }: Pr
           >
             <ZoomIn className="h-4 w-4" />
           </Button>
+          <Button
+            size="sm"
+            variant={fullscreen ? "default" : "outline"}
+            onClick={() => (fullscreen ? exitFullscreen() : enterFullscreen())}
+            title={fullscreen ? "Sair da tela cheia" : "Tela cheia"}
+            aria-label={fullscreen ? "Sair da tela cheia" : "Tela cheia"}
+          >
+            {fullscreen ? (
+              <Minimize2 className="h-4 w-4" />
+            ) : (
+              <Maximize2 className="h-4 w-4" />
+            )}
+          </Button>
         </div>
       </div>
 
-      {highlight && (
+      {highlight && !fullscreen && (
         <div className="rounded-md border bg-card p-3 text-sm">
           <div className="mb-1 text-xs font-medium uppercase text-muted-foreground">
             Trecho encontrado
@@ -325,7 +431,11 @@ export function PdfViewer({ blob, initialPage = 1, highlight, onPageChange }: Pr
       {/* Canvas viewport (virtualization: apenas página atual no DOM) */}
       <div
         ref={containerRef}
-        className="relative max-h-[78vh] min-h-[400px] w-full overflow-auto rounded-md border bg-muted/40 p-3 touch-pan-y"
+        className={
+          fullscreen
+            ? "relative min-h-0 w-full flex-1 overflow-auto rounded-md border bg-muted/40 p-2 touch-pan-y"
+            : "relative max-h-[78vh] min-h-[400px] w-full overflow-auto rounded-md border bg-muted/40 p-3 touch-pan-y"
+        }
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
@@ -337,6 +447,7 @@ export function PdfViewer({ blob, initialPage = 1, highlight, onPageChange }: Pr
         )}
         <canvas ref={canvasRef} className="mx-auto block bg-white shadow" />
       </div>
+
 
       <div className="text-center text-xs text-muted-foreground">
         Página {page} de {numPages || "…"}

@@ -1,5 +1,7 @@
 import { db, type DocRecord } from "./db";
 import { invalidateIndex } from "./search";
+import { dedupeLibrary, findExistingDoc } from "./dedupe";
+
 
 export const SMR_SOURCE_KEY = "smr";
 const SMR_INDEX_VERSION_STORAGE = "smr-index-version";
@@ -95,15 +97,13 @@ class SmrBootstrapManager {
   private async run() {
     this.set({ phase: "checking", message: "Verificando Manual SMR…" });
 
-    const existing = await db.docs
-      .where("sourceKey")
-      .equals(SMR_SOURCE_KEY)
-      .first();
-
-    const cachedVersion =
-      typeof localStorage !== "undefined"
-        ? localStorage.getItem(SMR_INDEX_VERSION_STORAGE)
-        : null;
+    // Collapse any legacy duplicates before deciding what to register.
+    try {
+      const removed = await dedupeLibrary();
+      if (removed) console.info(`[SMR] ${removed} registro(s) duplicado(s) removido(s)`);
+    } catch (e) {
+      console.warn("[SMR] dedupe falhou", e);
+    }
 
     // Load pointer to PDF asset
     const assetMod = (await import("./smr.pdf.asset.json")) as {
@@ -112,6 +112,23 @@ class SmrBootstrapManager {
     };
     const pdfUrl =
       (assetMod.default?.url ?? assetMod.url) as string | undefined;
+
+    // Match by sourceKey, url or file name so the manual is never re-added.
+    const existing = await findExistingDoc({
+      sourceKey: SMR_SOURCE_KEY,
+      pdfUrl,
+      fileName: "SAC_Sistema_Administracao_Conservacao.pdf",
+    });
+    if (existing?.id != null && existing.sourceKey !== SMR_SOURCE_KEY) {
+      await db.docs.update(existing.id, { sourceKey: SMR_SOURCE_KEY, protected: true });
+      existing.sourceKey = SMR_SOURCE_KEY;
+    }
+
+    const cachedVersion =
+      typeof localStorage !== "undefined"
+        ? localStorage.getItem(SMR_INDEX_VERSION_STORAGE)
+        : null;
+
 
     if (existing && cachedVersion === String(existing.indexVersion)) {
       this.set({
