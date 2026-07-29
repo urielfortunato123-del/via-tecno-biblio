@@ -73,14 +73,16 @@ export async function findExistingDoc(
 export async function purgeDoc(docId: number): Promise<void> {
   await db.transaction(
     "rw",
-    db.docs,
-    db.pages,
-    db.blobs,
-    db.favorites,
-    db.history,
-    db.glossary,
-    db.ocrPages,
-    db.inspectionRefs,
+    [
+      db.docs,
+      db.pages,
+      db.blobs,
+      db.favorites,
+      db.history,
+      db.glossary,
+      db.ocrPages,
+      db.inspectionRefs,
+    ],
     async () => {
       await db.docs.delete(docId);
       await db.pages.where("docId").equals(docId).delete();
