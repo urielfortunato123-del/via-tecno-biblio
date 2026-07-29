@@ -153,18 +153,18 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <InspectionProvider>
         <SidebarProvider>
-          <div className="flex min-h-screen w-full">
+          <div className="flex min-h-screen w-full min-w-0 max-w-full overflow-x-hidden">
             <AppSidebar />
-            <div className="flex flex-1 flex-col">
-              <header className="sticky top-0 z-20 flex h-12 items-center gap-2 border-b bg-background/80 px-3 backdrop-blur">
+            <div className="flex min-w-0 flex-1 flex-col">
+              <header className="sticky top-0 z-20 flex h-12 items-center gap-2 border-b bg-background/80 px-3 backdrop-blur pt-[env(safe-area-inset-top)]">
                 <SidebarTrigger />
-                <span className="text-sm font-medium">Via Norma</span>
+                <span className="truncate text-sm font-medium">Via Norma</span>
               </header>
-              <main className="flex-1">
+              <main className="min-w-0 flex-1 overflow-x-hidden">
                 {/* Required: nested routes render here. */}
                 <Outlet />
               </main>
-              <footer className="border-t px-3 py-2 text-center text-xs text-muted-foreground">
+              <footer className="border-t px-3 py-2 pb-[max(env(safe-area-inset-bottom),0.5rem)] text-center text-xs text-muted-foreground">
                 Desenvolvido por Uriel da Fonseca Fortunato
               </footer>
             </div>
