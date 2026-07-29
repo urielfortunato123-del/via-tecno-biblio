@@ -94,7 +94,9 @@ async def find_search_input(page: Page):
         'input[placeholder*="uscar" i]',
         'input[placeholder*="esquis" i]',
         'input[placeholder*="ermo" i]',
+        'input[placeholder*="onsult" i]',
         'input[type="text"]',
+        'input:not([type="checkbox"]):not([type="radio"]):not([type="file"])',
     ]:
         loc = page.locator(sel).first
         try:
