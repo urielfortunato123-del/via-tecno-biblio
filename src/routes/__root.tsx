@@ -142,6 +142,9 @@ function RootComponent() {
                 {/* Required: nested routes render here. */}
                 <Outlet />
               </main>
+              <footer className="border-t px-3 py-2 text-center text-xs text-muted-foreground">
+                Desenvolvido por Uriel da Fonseca Fortunato
+              </footer>
             </div>
           </div>
           <Toaster richColors position="top-right" />
