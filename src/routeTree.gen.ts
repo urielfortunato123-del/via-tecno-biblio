@@ -9,38 +9,132 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as BibliotecaRouteImport } from './routes/biblioteca'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BibliotecaIndexRouteImport } from './routes/biblioteca.index'
+import { Route as BibliotecaHistoricoRouteImport } from './routes/biblioteca.historico'
+import { Route as BibliotecaFavoritosRouteImport } from './routes/biblioteca.favoritos'
+import { Route as BibliotecaDocumentosRouteImport } from './routes/biblioteca.documentos'
+import { Route as BibliotecaAdminRouteImport } from './routes/biblioteca.admin'
+import { Route as BibliotecaDocDocIdRouteImport } from './routes/biblioteca.doc.$docId'
 
+const BibliotecaRoute = BibliotecaRouteImport.update({
+  id: '/biblioteca',
+  path: '/biblioteca',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BibliotecaIndexRoute = BibliotecaIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BibliotecaRoute,
+} as any)
+const BibliotecaHistoricoRoute = BibliotecaHistoricoRouteImport.update({
+  id: '/historico',
+  path: '/historico',
+  getParentRoute: () => BibliotecaRoute,
+} as any)
+const BibliotecaFavoritosRoute = BibliotecaFavoritosRouteImport.update({
+  id: '/favoritos',
+  path: '/favoritos',
+  getParentRoute: () => BibliotecaRoute,
+} as any)
+const BibliotecaDocumentosRoute = BibliotecaDocumentosRouteImport.update({
+  id: '/documentos',
+  path: '/documentos',
+  getParentRoute: () => BibliotecaRoute,
+} as any)
+const BibliotecaAdminRoute = BibliotecaAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => BibliotecaRoute,
+} as any)
+const BibliotecaDocDocIdRoute = BibliotecaDocDocIdRouteImport.update({
+  id: '/doc/$docId',
+  path: '/doc/$docId',
+  getParentRoute: () => BibliotecaRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/biblioteca': typeof BibliotecaRouteWithChildren
+  '/biblioteca/admin': typeof BibliotecaAdminRoute
+  '/biblioteca/documentos': typeof BibliotecaDocumentosRoute
+  '/biblioteca/favoritos': typeof BibliotecaFavoritosRoute
+  '/biblioteca/historico': typeof BibliotecaHistoricoRoute
+  '/biblioteca/': typeof BibliotecaIndexRoute
+  '/biblioteca/doc/$docId': typeof BibliotecaDocDocIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/biblioteca/admin': typeof BibliotecaAdminRoute
+  '/biblioteca/documentos': typeof BibliotecaDocumentosRoute
+  '/biblioteca/favoritos': typeof BibliotecaFavoritosRoute
+  '/biblioteca/historico': typeof BibliotecaHistoricoRoute
+  '/biblioteca': typeof BibliotecaIndexRoute
+  '/biblioteca/doc/$docId': typeof BibliotecaDocDocIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/biblioteca': typeof BibliotecaRouteWithChildren
+  '/biblioteca/admin': typeof BibliotecaAdminRoute
+  '/biblioteca/documentos': typeof BibliotecaDocumentosRoute
+  '/biblioteca/favoritos': typeof BibliotecaFavoritosRoute
+  '/biblioteca/historico': typeof BibliotecaHistoricoRoute
+  '/biblioteca/': typeof BibliotecaIndexRoute
+  '/biblioteca/doc/$docId': typeof BibliotecaDocDocIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/biblioteca'
+    | '/biblioteca/admin'
+    | '/biblioteca/documentos'
+    | '/biblioteca/favoritos'
+    | '/biblioteca/historico'
+    | '/biblioteca/'
+    | '/biblioteca/doc/$docId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/biblioteca/admin'
+    | '/biblioteca/documentos'
+    | '/biblioteca/favoritos'
+    | '/biblioteca/historico'
+    | '/biblioteca'
+    | '/biblioteca/doc/$docId'
+  id:
+    | '__root__'
+    | '/'
+    | '/biblioteca'
+    | '/biblioteca/admin'
+    | '/biblioteca/documentos'
+    | '/biblioteca/favoritos'
+    | '/biblioteca/historico'
+    | '/biblioteca/'
+    | '/biblioteca/doc/$docId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BibliotecaRoute: typeof BibliotecaRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/biblioteca': {
+      id: '/biblioteca'
+      path: '/biblioteca'
+      fullPath: '/biblioteca'
+      preLoaderRoute: typeof BibliotecaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +142,77 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/biblioteca/': {
+      id: '/biblioteca/'
+      path: '/'
+      fullPath: '/biblioteca/'
+      preLoaderRoute: typeof BibliotecaIndexRouteImport
+      parentRoute: typeof BibliotecaRoute
+    }
+    '/biblioteca/historico': {
+      id: '/biblioteca/historico'
+      path: '/historico'
+      fullPath: '/biblioteca/historico'
+      preLoaderRoute: typeof BibliotecaHistoricoRouteImport
+      parentRoute: typeof BibliotecaRoute
+    }
+    '/biblioteca/favoritos': {
+      id: '/biblioteca/favoritos'
+      path: '/favoritos'
+      fullPath: '/biblioteca/favoritos'
+      preLoaderRoute: typeof BibliotecaFavoritosRouteImport
+      parentRoute: typeof BibliotecaRoute
+    }
+    '/biblioteca/documentos': {
+      id: '/biblioteca/documentos'
+      path: '/documentos'
+      fullPath: '/biblioteca/documentos'
+      preLoaderRoute: typeof BibliotecaDocumentosRouteImport
+      parentRoute: typeof BibliotecaRoute
+    }
+    '/biblioteca/admin': {
+      id: '/biblioteca/admin'
+      path: '/admin'
+      fullPath: '/biblioteca/admin'
+      preLoaderRoute: typeof BibliotecaAdminRouteImport
+      parentRoute: typeof BibliotecaRoute
+    }
+    '/biblioteca/doc/$docId': {
+      id: '/biblioteca/doc/$docId'
+      path: '/doc/$docId'
+      fullPath: '/biblioteca/doc/$docId'
+      preLoaderRoute: typeof BibliotecaDocDocIdRouteImport
+      parentRoute: typeof BibliotecaRoute
+    }
   }
 }
 
+interface BibliotecaRouteChildren {
+  BibliotecaAdminRoute: typeof BibliotecaAdminRoute
+  BibliotecaDocumentosRoute: typeof BibliotecaDocumentosRoute
+  BibliotecaFavoritosRoute: typeof BibliotecaFavoritosRoute
+  BibliotecaHistoricoRoute: typeof BibliotecaHistoricoRoute
+  BibliotecaIndexRoute: typeof BibliotecaIndexRoute
+  BibliotecaDocDocIdRoute: typeof BibliotecaDocDocIdRoute
+}
+
+const BibliotecaRouteChildren: BibliotecaRouteChildren = {
+  BibliotecaAdminRoute: BibliotecaAdminRoute,
+  BibliotecaDocumentosRoute: BibliotecaDocumentosRoute,
+  BibliotecaFavoritosRoute: BibliotecaFavoritosRoute,
+  BibliotecaHistoricoRoute: BibliotecaHistoricoRoute,
+  BibliotecaIndexRoute: BibliotecaIndexRoute,
+  BibliotecaDocDocIdRoute: BibliotecaDocDocIdRoute,
+}
+
+const BibliotecaRouteWithChildren = BibliotecaRoute._addFileChildren(
+  BibliotecaRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BibliotecaRoute: BibliotecaRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

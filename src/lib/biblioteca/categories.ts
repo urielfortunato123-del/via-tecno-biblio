@@ -1,0 +1,48 @@
+export const CATEGORIES = [
+  "Pavimento",
+  "Drenagem",
+  "Terraplenagem",
+  "Sinalização Horizontal",
+  "Sinalização Vertical",
+  "Segurança Viária",
+  "Dispositivos de Segurança",
+  "Faixa de Domínio",
+  "Vegetação",
+  "Pontes",
+  "Viadutos",
+  "Obras de Arte Especiais",
+  "Conservação Rotineira",
+  "Conservação Periódica",
+  "Conservação Emergencial",
+  "Medição",
+  "Fiscalização",
+  "DER",
+  "DNIT",
+  "ARTESP",
+  "Normas Técnicas",
+  "Procedimentos Internos",
+  "Equipamentos",
+  "Materiais",
+  "Patologias",
+  "Controle Tecnológico",
+  "Topografia",
+  "Geotecnia",
+  "Meio Ambiente",
+] as const;
+
+export type Categoria = (typeof CATEGORIES)[number];
+
+// Synonyms map — expands user query terms to improve recall.
+export const SYNONYMS: Record<string, string[]> = {
+  buraco: ["panela", "remendo", "cbuq", "afundamento", "recalque", "patologia"],
+  panela: ["buraco", "remendo", "cbuq"],
+  sarjeta: ["drenagem", "valeta", "bueiro", "caixa coletora", "limpeza"],
+  placa: ["sinalização", "suporte", "instalação"],
+  defensa: ["barreira", "guarda-corpo", "segurança viária"],
+  cbuq: ["asfalto", "concreto asfáltico", "pavimento"],
+  talude: ["corte", "aterro", "geotecnia"],
+  berma: ["acostamento", "plataforma"],
+  bueiro: ["drenagem", "sarjeta", "obra de arte"],
+  pintura: ["sinalização horizontal", "faixa"],
+  faixa: ["sinalização horizontal", "pintura"],
+};
