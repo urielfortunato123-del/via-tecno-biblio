@@ -4,6 +4,16 @@
     "orientation": "portrait",
     "checks": [
       {
+        "name": "search:no_overflow",
+        "ok": true,
+        "detail": "sw=390 cw=390"
+      },
+      {
+        "name": "search:visible_above_keyboard",
+        "ok": true,
+        "detail": "bottom=230 visible=464"
+      },
+      {
         "name": "select:no_overflow",
         "ok": true,
         "detail": "sw=390 cw=390"
@@ -11,25 +21,38 @@
       {
         "name": "select:listbox_above_keyboard",
         "ok": true,
-        "detail": "lb_bottom=838 visible=844"
+        "detail": "lb_bottom=238 visible=464"
       }
     ],
-    "kb_search": null,
+    "kb_search": {
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "innerWidth": 390,
+      "vvHeight": 464,
+      "visibleBottom": 464,
+      "focusedTag": "INPUT",
+      "focusedRect": {
+        "top": 186,
+        "bottom": 230,
+        "left": 29,
+        "right": 361
+      }
+    },
     "kb_select": {
       "scrollWidth": 390,
       "clientWidth": 390,
       "innerWidth": 390,
-      "vvHeight": 844,
-      "visibleBottom": 844,
+      "vvHeight": 464,
+      "visibleBottom": 464,
       "focusedTag": "DIV",
       "focusedRect": {
-        "top": 287,
-        "bottom": 319,
+        "top": 11,
+        "bottom": 43,
         "left": 34,
         "right": 314
       },
       "trigger_bottom": 278,
-      "listbox_bottom": 838
+      "listbox_bottom": 238
     }
   },
   {
@@ -89,6 +112,16 @@
     "orientation": "portrait",
     "checks": [
       {
+        "name": "search:no_overflow",
+        "ok": true,
+        "detail": "sw=390 cw=390"
+      },
+      {
+        "name": "search:visible_above_keyboard",
+        "ok": true,
+        "detail": "bottom=358 visible=464"
+      },
+      {
         "name": "select:no_overflow",
         "ok": true,
         "detail": "sw=390 cw=390"
@@ -96,31 +129,54 @@
       {
         "name": "select:listbox_above_keyboard",
         "ok": true,
-        "detail": "lb_bottom=838 visible=844"
+        "detail": "lb_bottom=400 visible=464"
       }
     ],
-    "kb_search": null,
+    "kb_search": {
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "innerWidth": 390,
+      "vvHeight": 464,
+      "visibleBottom": 464,
+      "focusedTag": "INPUT",
+      "focusedRect": {
+        "top": 322,
+        "bottom": 358,
+        "left": 29,
+        "right": 361
+      }
+    },
     "kb_select": {
       "scrollWidth": 390,
       "clientWidth": 390,
       "innerWidth": 390,
-      "vvHeight": 844,
-      "visibleBottom": 844,
+      "vvHeight": 464,
+      "visibleBottom": 464,
       "focusedTag": "DIV",
       "focusedRect": {
-        "top": 449,
-        "bottom": 481,
+        "top": 11,
+        "bottom": 43,
         "left": 34,
         "right": 246.109375
       },
       "trigger_bottom": 532,
-      "listbox_bottom": 838
+      "listbox_bottom": 400
     }
   },
   {
     "route": "/biblioteca",
     "orientation": "landscape",
     "checks": [
+      {
+        "name": "search:no_overflow",
+        "ok": true,
+        "detail": "sw=844 cw=844"
+      },
+      {
+        "name": "search:visible_above_keyboard",
+        "ok": false,
+        "detail": "bottom=217 visible=214"
+      },
       {
         "name": "select:no_overflow",
         "ok": true,
@@ -129,25 +185,38 @@
       {
         "name": "select:listbox_above_keyboard",
         "ok": true,
-        "detail": "lb_bottom=384 visible=390"
+        "detail": "lb_bottom=173 visible=214"
       }
     ],
-    "kb_search": null,
+    "kb_search": {
+      "scrollWidth": 844,
+      "clientWidth": 844,
+      "innerWidth": 844,
+      "vvHeight": 214,
+      "visibleBottom": 214,
+      "focusedTag": "INPUT",
+      "focusedRect": {
+        "top": 173,
+        "bottom": 217,
+        "left": 289,
+        "right": 531
+      }
+    },
     "kb_select": {
       "scrollWidth": 844,
       "clientWidth": 844,
       "innerWidth": 844,
-      "vvHeight": 390,
-      "visibleBottom": 390,
+      "vvHeight": 214,
+      "visibleBottom": 214,
       "focusedTag": "DIV",
       "focusedRect": {
-        "top": 222,
-        "bottom": 254,
+        "top": 11,
+        "bottom": 43,
         "left": 548,
         "right": 764
       },
-      "trigger_bottom": 222,
-      "listbox_bottom": 384
+      "trigger_bottom": 209,
+      "listbox_bottom": 173
     }
   },
   {
@@ -207,6 +276,16 @@
     "orientation": "landscape",
     "checks": [
       {
+        "name": "search:no_overflow",
+        "ok": true,
+        "detail": "sw=844 cw=844"
+      },
+      {
+        "name": "search:visible_above_keyboard",
+        "ok": true,
+        "detail": "bottom=213 visible=214"
+      },
+      {
         "name": "select:no_overflow",
         "ok": true,
         "detail": "sw=844 cw=844"
@@ -214,25 +293,38 @@
       {
         "name": "select:listbox_above_keyboard",
         "ok": true,
-        "detail": "lb_bottom=384 visible=390"
+        "detail": "lb_bottom=173 visible=214"
       }
     ],
-    "kb_search": null,
+    "kb_search": {
+      "scrollWidth": 844,
+      "clientWidth": 844,
+      "innerWidth": 844,
+      "vvHeight": 214,
+      "visibleBottom": 214,
+      "focusedTag": "INPUT",
+      "focusedRect": {
+        "top": 177,
+        "bottom": 213,
+        "left": 289,
+        "right": 811
+      }
+    },
     "kb_select": {
       "scrollWidth": 844,
       "clientWidth": 844,
       "innerWidth": 844,
-      "vvHeight": 390,
-      "visibleBottom": 390,
+      "vvHeight": 214,
+      "visibleBottom": 214,
       "focusedTag": "DIV",
       "focusedRect": {
-        "top": 222,
-        "bottom": 254,
+        "top": 11,
+        "bottom": 43,
         "left": 294,
         "right": 541
       },
-      "trigger_bottom": 213,
-      "listbox_bottom": 384
+      "trigger_bottom": 326,
+      "listbox_bottom": 173
     }
   },
   {
@@ -240,9 +332,14 @@
     "orientation": "switch",
     "checks": [
       {
-        "name": "search_input_present",
+        "name": "switch:no_overflow",
+        "ok": true,
+        "detail": "sw=844 cw=844"
+      },
+      {
+        "name": "switch:focus_visible",
         "ok": false,
-        "detail": "not found"
+        "detail": "bottom=217 visible=214"
       }
     ]
   }
