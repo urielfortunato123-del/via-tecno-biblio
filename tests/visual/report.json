@@ -1,186 +1,5 @@
 {
-  "failures": [
-    {
-      "key": "mobile-portrait-360__biblioteca",
-      "reason": "element overflow",
-      "elements": [
-        {
-          "tag": "a",
-          "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-          "right": 387,
-          "width": 83
-        },
-        {
-          "tag": "a",
-          "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-          "right": 458,
-          "width": 67
-        }
-      ]
-    },
-    {
-      "key": "mobile-portrait-360__biblioteca-documentos",
-      "reason": "element overflow",
-      "elements": [
-        {
-          "tag": "a",
-          "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-          "right": 387,
-          "width": 83
-        },
-        {
-          "tag": "a",
-          "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-          "right": 458,
-          "width": 67
-        }
-      ]
-    },
-    {
-      "key": "mobile-portrait-360__biblioteca-favoritos",
-      "reason": "element overflow",
-      "elements": [
-        {
-          "tag": "a",
-          "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-          "right": 387,
-          "width": 83
-        },
-        {
-          "tag": "a",
-          "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-          "right": 458,
-          "width": 67
-        }
-      ]
-    },
-    {
-      "key": "mobile-portrait-360__biblioteca-historico",
-      "reason": "element overflow",
-      "elements": [
-        {
-          "tag": "a",
-          "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors bg-primary text-primary-foreground active",
-          "right": 387,
-          "width": 83
-        },
-        {
-          "tag": "a",
-          "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-          "right": 458,
-          "width": 67
-        }
-      ]
-    },
-    {
-      "key": "mobile-portrait-360__biblioteca-glossario",
-      "reason": "element overflow",
-      "elements": [
-        {
-          "tag": "a",
-          "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-          "right": 387,
-          "width": 83
-        },
-        {
-          "tag": "a",
-          "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-          "right": 458,
-          "width": 67
-        }
-      ]
-    },
-    {
-      "key": "mobile-portrait-360__biblioteca-admin",
-      "reason": "element overflow",
-      "elements": [
-        {
-          "tag": "a",
-          "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-          "right": 387,
-          "width": 83
-        },
-        {
-          "tag": "a",
-          "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors bg-primary text-primary-foreground active",
-          "right": 458,
-          "width": 67
-        }
-      ]
-    },
-    {
-      "key": "mobile-portrait-390__biblioteca",
-      "reason": "element overflow",
-      "elements": [
-        {
-          "tag": "a",
-          "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-          "right": 458,
-          "width": 67
-        }
-      ]
-    },
-    {
-      "key": "mobile-portrait-390__biblioteca-documentos",
-      "reason": "element overflow",
-      "elements": [
-        {
-          "tag": "a",
-          "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-          "right": 458,
-          "width": 67
-        }
-      ]
-    },
-    {
-      "key": "mobile-portrait-390__biblioteca-favoritos",
-      "reason": "element overflow",
-      "elements": [
-        {
-          "tag": "a",
-          "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-          "right": 458,
-          "width": 67
-        }
-      ]
-    },
-    {
-      "key": "mobile-portrait-390__biblioteca-historico",
-      "reason": "element overflow",
-      "elements": [
-        {
-          "tag": "a",
-          "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-          "right": 458,
-          "width": 67
-        }
-      ]
-    },
-    {
-      "key": "mobile-portrait-390__biblioteca-glossario",
-      "reason": "element overflow",
-      "elements": [
-        {
-          "tag": "a",
-          "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-          "right": 458,
-          "width": 67
-        }
-      ]
-    },
-    {
-      "key": "mobile-portrait-390__biblioteca-admin",
-      "reason": "element overflow",
-      "elements": [
-        {
-          "tag": "a",
-          "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors bg-primary text-primary-foreground active",
-          "right": 458,
-          "width": 67
-        }
-      ]
-    }
-  ],
+  "failures": [],
   "results": [
     {
       "key": "mobile-portrait-360__home",
@@ -208,20 +27,7 @@
         "docSw": 360,
         "docCw": 360,
         "bodySw": 360,
-        "overflowing": [
-          {
-            "tag": "a",
-            "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-            "right": 387,
-            "width": 83
-          },
-          {
-            "tag": "a",
-            "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-            "right": 458,
-            "width": 67
-          }
-        ]
+        "overflowing": []
       },
       "diff_ratio": null
     },
@@ -236,20 +42,7 @@
         "docSw": 360,
         "docCw": 360,
         "bodySw": 360,
-        "overflowing": [
-          {
-            "tag": "a",
-            "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-            "right": 387,
-            "width": 83
-          },
-          {
-            "tag": "a",
-            "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-            "right": 458,
-            "width": 67
-          }
-        ]
+        "overflowing": []
       },
       "diff_ratio": null
     },
@@ -264,20 +57,7 @@
         "docSw": 360,
         "docCw": 360,
         "bodySw": 360,
-        "overflowing": [
-          {
-            "tag": "a",
-            "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-            "right": 387,
-            "width": 83
-          },
-          {
-            "tag": "a",
-            "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-            "right": 458,
-            "width": 67
-          }
-        ]
+        "overflowing": []
       },
       "diff_ratio": null
     },
@@ -292,20 +72,7 @@
         "docSw": 360,
         "docCw": 360,
         "bodySw": 360,
-        "overflowing": [
-          {
-            "tag": "a",
-            "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors bg-primary text-primary-foreground active",
-            "right": 387,
-            "width": 83
-          },
-          {
-            "tag": "a",
-            "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-            "right": 458,
-            "width": 67
-          }
-        ]
+        "overflowing": []
       },
       "diff_ratio": null
     },
@@ -320,20 +87,7 @@
         "docSw": 360,
         "docCw": 360,
         "bodySw": 360,
-        "overflowing": [
-          {
-            "tag": "a",
-            "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-            "right": 387,
-            "width": 83
-          },
-          {
-            "tag": "a",
-            "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-            "right": 458,
-            "width": 67
-          }
-        ]
+        "overflowing": []
       },
       "diff_ratio": null
     },
@@ -348,20 +102,7 @@
         "docSw": 360,
         "docCw": 360,
         "bodySw": 360,
-        "overflowing": [
-          {
-            "tag": "a",
-            "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-            "right": 387,
-            "width": 83
-          },
-          {
-            "tag": "a",
-            "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors bg-primary text-primary-foreground active",
-            "right": 458,
-            "width": 67
-          }
-        ]
+        "overflowing": []
       },
       "diff_ratio": null
     },
@@ -421,14 +162,7 @@
         "docSw": 390,
         "docCw": 390,
         "bodySw": 390,
-        "overflowing": [
-          {
-            "tag": "a",
-            "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-            "right": 458,
-            "width": 67
-          }
-        ]
+        "overflowing": []
       },
       "diff_ratio": null
     },
@@ -443,14 +177,7 @@
         "docSw": 390,
         "docCw": 390,
         "bodySw": 390,
-        "overflowing": [
-          {
-            "tag": "a",
-            "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-            "right": 458,
-            "width": 67
-          }
-        ]
+        "overflowing": []
       },
       "diff_ratio": null
     },
@@ -465,14 +192,7 @@
         "docSw": 390,
         "docCw": 390,
         "bodySw": 390,
-        "overflowing": [
-          {
-            "tag": "a",
-            "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-            "right": 458,
-            "width": 67
-          }
-        ]
+        "overflowing": []
       },
       "diff_ratio": null
     },
@@ -487,14 +207,7 @@
         "docSw": 390,
         "docCw": 390,
         "bodySw": 390,
-        "overflowing": [
-          {
-            "tag": "a",
-            "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-            "right": 458,
-            "width": 67
-          }
-        ]
+        "overflowing": []
       },
       "diff_ratio": null
     },
@@ -509,14 +222,7 @@
         "docSw": 390,
         "docCw": 390,
         "bodySw": 390,
-        "overflowing": [
-          {
-            "tag": "a",
-            "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors text-muted-foreground hover:bg-accent hover:text-foreground",
-            "right": 458,
-            "width": 67
-          }
-        ]
+        "overflowing": []
       },
       "diff_ratio": null
     },
@@ -531,14 +237,7 @@
         "docSw": 390,
         "docCw": 390,
         "bodySw": 390,
-        "overflowing": [
-          {
-            "tag": "a",
-            "cls": "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors bg-primary text-primary-foreground active",
-            "right": 458,
-            "width": 67
-          }
-        ]
+        "overflowing": []
       },
       "diff_ratio": null
     },
