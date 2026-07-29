@@ -86,7 +86,7 @@ function DocViewerPage() {
         await navigator.share(shareData);
         return;
       }
-      if (shareData.url) {
+      if (shareData.url && typeof navigator !== "undefined" && navigator.clipboard) {
         await navigator.clipboard.writeText(shareData.url);
         toast.success("Link copiado");
       }
