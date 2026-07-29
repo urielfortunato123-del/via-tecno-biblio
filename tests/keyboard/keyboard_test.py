@@ -87,8 +87,6 @@ async def measure(page: Page):
     """)
 
 
-async def find_search_input(page: Page):
-    # Try common selectors
 ENSURE_VISIBLE_JS = """
 () => {
   const el = document.activeElement;
@@ -105,6 +103,17 @@ ENSURE_VISIBLE_JS = """
 }
 """
 
+
+async def find_search_input(page: Page):
+    for sel in [
+        'input[type="search"]',
+        'input[placeholder*="uscar" i]',
+        'input[placeholder*="esquis" i]',
+        'input[placeholder*="ermo" i]',
+        'input[placeholder*="onsult" i]',
+        'input[type="text"]',
+        'input:not([type="checkbox"]):not([type="radio"]):not([type="file"])',
+    ]:
         loc = page.locator(sel).first
         try:
             if await loc.count() > 0:
@@ -112,6 +121,7 @@ ENSURE_VISIBLE_JS = """
         except Exception:
             continue
     return None
+
 
 
 async def test_route(page: Page, route: str, orientation: str, results: list):
