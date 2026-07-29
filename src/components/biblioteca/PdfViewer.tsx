@@ -37,6 +37,7 @@ const MIN_SCALE = 0.4;
 const MAX_SCALE = 4;
 
 export function PdfViewer({ blob, initialPage = 1, highlight, onPageChange }: Props) {
+  const rootRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const renderTaskRef = useRef<{ cancel: () => void } | null>(null);
