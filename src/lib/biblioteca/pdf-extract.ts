@@ -1,11 +1,4 @@
-// PDF text extraction using pdf.js. Browser-only.
-import * as pdfjsLib from "pdfjs-dist";
-// Vite serves the worker file via ?url
-import workerSrc from "pdfjs-dist/build/pdf.worker.min.mjs?url";
-
-if (typeof window !== "undefined") {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
-}
+// PDF text extraction using pdf.js. Browser-only — lazy-loaded.
 
 export interface ExtractedPage {
   page: number;
@@ -18,9 +11,17 @@ export interface ExtractResult {
   hasText: boolean;
 }
 
+async function loadPdfjs() {
+  const pdfjs = await import("pdfjs-dist");
+  const workerSrc = (await import("pdfjs-dist/build/pdf.worker.min.mjs?url")).default;
+  pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
+  return pdfjs;
+}
+
 export async function extractPdf(file: Blob): Promise<ExtractResult> {
+  const pdfjs = await loadPdfjs();
   const buf = await file.arrayBuffer();
-  const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+  const pdf = await pdfjs.getDocument({ data: buf }).promise;
   const pages: ExtractedPage[] = [];
   let totalChars = 0;
   for (let i = 1; i <= pdf.numPages; i++) {
@@ -39,7 +40,6 @@ export async function extractPdf(file: Blob): Promise<ExtractResult> {
 
 export async function extractTxt(file: Blob): Promise<ExtractResult> {
   const text = await file.text();
-  // Paginate by ~3000 chars.
   const CHUNK = 3000;
   const pages: ExtractedPage[] = [];
   for (let i = 0, p = 1; i < text.length; i += CHUNK, p++) {

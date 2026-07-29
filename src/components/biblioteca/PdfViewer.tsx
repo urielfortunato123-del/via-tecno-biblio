@@ -1,12 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import * as pdfjsLib from "pdfjs-dist";
-import workerSrc from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
-
-if (typeof window !== "undefined") {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
-}
 
 interface Props {
   blob: Blob;
@@ -14,9 +8,20 @@ interface Props {
   highlight?: string;
 }
 
+// Loaded lazily inside effects so pdfjs never enters the SSR bundle.
+async function loadPdfjs() {
+  const pdfjs = await import("pdfjs-dist");
+  const workerSrc = (await import("pdfjs-dist/build/pdf.worker.min.mjs?url")).default;
+  pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
+  return pdfjs;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type PdfDoc = any;
+
 export function PdfViewer({ blob, initialPage = 1, highlight }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [pdf, setPdf] = useState<pdfjsLib.PDFDocumentProxy | null>(null);
+  const [pdf, setPdf] = useState<PdfDoc | null>(null);
   const [page, setPage] = useState(initialPage);
   const [scale, setScale] = useState(1.2);
   const [numPages, setNumPages] = useState(0);
@@ -27,8 +32,9 @@ export function PdfViewer({ blob, initialPage = 1, highlight }: Props) {
     let cancelled = false;
     (async () => {
       try {
+        const pdfjs = await loadPdfjs();
         const buf = await blob.arrayBuffer();
-        const doc = await pdfjsLib.getDocument({ data: buf }).promise;
+        const doc = await pdfjs.getDocument({ data: buf }).promise;
         if (cancelled) return;
         setPdf(doc);
         setNumPages(doc.numPages);
@@ -57,7 +63,7 @@ export function PdfViewer({ blob, initialPage = 1, highlight }: Props) {
       const content = await p.getTextContent();
       setPageText(
         content.items
-          .map((it) => ("str" in it ? (it as { str: string }).str : ""))
+          .map((it: { str?: string }) => it.str ?? "")
           .join(" "),
       );
     })();
