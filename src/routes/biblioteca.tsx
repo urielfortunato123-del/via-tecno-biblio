@@ -29,17 +29,20 @@ function BibliotecaLayout() {
     { to: "/biblioteca/admin", label: "Admin" },
   ];
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6">
-      <div className="mb-4 flex flex-wrap items-center gap-2 border-b pb-3">
-        <h1 className="mr-4 text-xl font-semibold">📚 Biblioteca Técnica</h1>
-        <nav className="flex flex-wrap gap-1">
+    <div className="mx-auto w-full max-w-6xl min-w-0 px-3 py-6 sm:px-4">
+      <div className="mb-4 min-w-0 border-b pb-3">
+        <h1 className="mb-2 text-xl font-semibold break-words">📚 Biblioteca Técnica</h1>
+        <nav
+          className="-mx-1 flex gap-1 overflow-x-auto whitespace-nowrap px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          style={{ WebkitOverflowScrolling: "touch" }}
+        >
           {tabs.map((t) => {
             const active = t.to === "/biblioteca" ? path === t.to : path.startsWith(t.to);
             return (
               <Link
                 key={t.to}
                 to={t.to}
-                className={`rounded-md px-3 py-1.5 text-sm transition-colors ${
+                className={`shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors ${
                   active
                     ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground hover:bg-accent hover:text-foreground"

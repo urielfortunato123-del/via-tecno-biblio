@@ -73,23 +73,23 @@ function SearchPage() {
   const empty = !searching && q.trim().length > 0 && hits.length === 0;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex min-w-0 flex-col gap-6">
       <Card className="p-4">
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <div className="relative flex-1">
+        <div className="flex min-w-0 flex-col gap-3 sm:flex-row">
+          <div className="relative min-w-0 flex-1">
             <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="O que deseja consultar?"
-              className="pl-9 text-base h-11"
+              className="h-11 w-full pl-9 text-base"
               autoFocus
               inputMode="search"
             />
           </div>
-          <div className="flex gap-2">
+          <div className="flex min-w-0 gap-2">
             <Select value={categoria} onValueChange={setCategoria}>
-              <SelectTrigger className="w-full sm:w-56">
+              <SelectTrigger className="w-full min-w-0 sm:w-56">
                 <SelectValue placeholder="Categoria" />
               </SelectTrigger>
               <SelectContent>
@@ -104,6 +104,7 @@ function SearchPage() {
             <Button
               variant="outline"
               size="icon"
+              className="shrink-0"
               title="Pesquisa por voz (em breve)"
               onClick={() => toast.info("Pesquisa por voz será habilitada em breve.")}
             >
