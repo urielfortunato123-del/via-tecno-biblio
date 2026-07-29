@@ -172,6 +172,7 @@ function RootComponent() {
           </div>
           <Toaster richColors position="top-right" />
           <SmrBootstrap />
+          <InstallPwaPrompt />
         </SidebarProvider>
       </InspectionProvider>
     </QueryClientProvider>
