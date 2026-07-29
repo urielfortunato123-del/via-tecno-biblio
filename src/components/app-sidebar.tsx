@@ -10,7 +10,9 @@ import {
   ClipboardList,
   FileText,
   Library,
+  Download,
 } from "lucide-react";
+import { openInstallPromptManually } from "@/components/InstallPwaPrompt";
 import {
   Sidebar,
   SidebarContent,
