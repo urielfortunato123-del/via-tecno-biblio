@@ -52,6 +52,8 @@
     "dexie-react-hooks": "^4.4.0",
     "embla-carousel-react": "^8.6.0",
     "input-otp": "^1.4.2",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8",
     "lucide-react": "^0.575.0",
     "minisearch": "^7.2.0",
     "pdfjs-dist": "^6.1.200",

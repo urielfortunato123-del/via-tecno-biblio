@@ -11,8 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as BibliotecaRouteImport } from './routes/biblioteca'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RelatoriosIndexRouteImport } from './routes/relatorios.index'
+import { Route as InspecaoIndexRouteImport } from './routes/inspecao.index'
 import { Route as BibliotecaIndexRouteImport } from './routes/biblioteca.index'
+import { Route as InspecaoIdRouteImport } from './routes/inspecao.$id'
+import { Route as ChecklistsIdRouteImport } from './routes/checklists.$id'
 import { Route as BibliotecaHistoricoRouteImport } from './routes/biblioteca.historico'
+import { Route as BibliotecaGlossarioRouteImport } from './routes/biblioteca.glossario'
 import { Route as BibliotecaFavoritosRouteImport } from './routes/biblioteca.favoritos'
 import { Route as BibliotecaDocumentosRouteImport } from './routes/biblioteca.documentos'
 import { Route as BibliotecaAdminRouteImport } from './routes/biblioteca.admin'
@@ -28,14 +33,39 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RelatoriosIndexRoute = RelatoriosIndexRouteImport.update({
+  id: '/relatorios/',
+  path: '/relatorios/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InspecaoIndexRoute = InspecaoIndexRouteImport.update({
+  id: '/inspecao/',
+  path: '/inspecao/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BibliotecaIndexRoute = BibliotecaIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => BibliotecaRoute,
 } as any)
+const InspecaoIdRoute = InspecaoIdRouteImport.update({
+  id: '/inspecao/$id',
+  path: '/inspecao/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChecklistsIdRoute = ChecklistsIdRouteImport.update({
+  id: '/checklists/$id',
+  path: '/checklists/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BibliotecaHistoricoRoute = BibliotecaHistoricoRouteImport.update({
   id: '/historico',
   path: '/historico',
+  getParentRoute: () => BibliotecaRoute,
+} as any)
+const BibliotecaGlossarioRoute = BibliotecaGlossarioRouteImport.update({
+  id: '/glossario',
+  path: '/glossario',
   getParentRoute: () => BibliotecaRoute,
 } as any)
 const BibliotecaFavoritosRoute = BibliotecaFavoritosRouteImport.update({
@@ -65,8 +95,13 @@ export interface FileRoutesByFullPath {
   '/biblioteca/admin': typeof BibliotecaAdminRoute
   '/biblioteca/documentos': typeof BibliotecaDocumentosRoute
   '/biblioteca/favoritos': typeof BibliotecaFavoritosRoute
+  '/biblioteca/glossario': typeof BibliotecaGlossarioRoute
   '/biblioteca/historico': typeof BibliotecaHistoricoRoute
+  '/checklists/$id': typeof ChecklistsIdRoute
+  '/inspecao/$id': typeof InspecaoIdRoute
   '/biblioteca/': typeof BibliotecaIndexRoute
+  '/inspecao/': typeof InspecaoIndexRoute
+  '/relatorios/': typeof RelatoriosIndexRoute
   '/biblioteca/doc/$docId': typeof BibliotecaDocDocIdRoute
 }
 export interface FileRoutesByTo {
@@ -74,8 +109,13 @@ export interface FileRoutesByTo {
   '/biblioteca/admin': typeof BibliotecaAdminRoute
   '/biblioteca/documentos': typeof BibliotecaDocumentosRoute
   '/biblioteca/favoritos': typeof BibliotecaFavoritosRoute
+  '/biblioteca/glossario': typeof BibliotecaGlossarioRoute
   '/biblioteca/historico': typeof BibliotecaHistoricoRoute
+  '/checklists/$id': typeof ChecklistsIdRoute
+  '/inspecao/$id': typeof InspecaoIdRoute
   '/biblioteca': typeof BibliotecaIndexRoute
+  '/inspecao': typeof InspecaoIndexRoute
+  '/relatorios': typeof RelatoriosIndexRoute
   '/biblioteca/doc/$docId': typeof BibliotecaDocDocIdRoute
 }
 export interface FileRoutesById {
@@ -85,8 +125,13 @@ export interface FileRoutesById {
   '/biblioteca/admin': typeof BibliotecaAdminRoute
   '/biblioteca/documentos': typeof BibliotecaDocumentosRoute
   '/biblioteca/favoritos': typeof BibliotecaFavoritosRoute
+  '/biblioteca/glossario': typeof BibliotecaGlossarioRoute
   '/biblioteca/historico': typeof BibliotecaHistoricoRoute
+  '/checklists/$id': typeof ChecklistsIdRoute
+  '/inspecao/$id': typeof InspecaoIdRoute
   '/biblioteca/': typeof BibliotecaIndexRoute
+  '/inspecao/': typeof InspecaoIndexRoute
+  '/relatorios/': typeof RelatoriosIndexRoute
   '/biblioteca/doc/$docId': typeof BibliotecaDocDocIdRoute
 }
 export interface FileRouteTypes {
@@ -97,8 +142,13 @@ export interface FileRouteTypes {
     | '/biblioteca/admin'
     | '/biblioteca/documentos'
     | '/biblioteca/favoritos'
+    | '/biblioteca/glossario'
     | '/biblioteca/historico'
+    | '/checklists/$id'
+    | '/inspecao/$id'
     | '/biblioteca/'
+    | '/inspecao/'
+    | '/relatorios/'
     | '/biblioteca/doc/$docId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -106,8 +156,13 @@ export interface FileRouteTypes {
     | '/biblioteca/admin'
     | '/biblioteca/documentos'
     | '/biblioteca/favoritos'
+    | '/biblioteca/glossario'
     | '/biblioteca/historico'
+    | '/checklists/$id'
+    | '/inspecao/$id'
     | '/biblioteca'
+    | '/inspecao'
+    | '/relatorios'
     | '/biblioteca/doc/$docId'
   id:
     | '__root__'
@@ -116,14 +171,23 @@ export interface FileRouteTypes {
     | '/biblioteca/admin'
     | '/biblioteca/documentos'
     | '/biblioteca/favoritos'
+    | '/biblioteca/glossario'
     | '/biblioteca/historico'
+    | '/checklists/$id'
+    | '/inspecao/$id'
     | '/biblioteca/'
+    | '/inspecao/'
+    | '/relatorios/'
     | '/biblioteca/doc/$docId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BibliotecaRoute: typeof BibliotecaRouteWithChildren
+  ChecklistsIdRoute: typeof ChecklistsIdRoute
+  InspecaoIdRoute: typeof InspecaoIdRoute
+  InspecaoIndexRoute: typeof InspecaoIndexRoute
+  RelatoriosIndexRoute: typeof RelatoriosIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -142,6 +206,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/relatorios/': {
+      id: '/relatorios/'
+      path: '/relatorios'
+      fullPath: '/relatorios/'
+      preLoaderRoute: typeof RelatoriosIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inspecao/': {
+      id: '/inspecao/'
+      path: '/inspecao'
+      fullPath: '/inspecao/'
+      preLoaderRoute: typeof InspecaoIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/biblioteca/': {
       id: '/biblioteca/'
       path: '/'
@@ -149,11 +227,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BibliotecaIndexRouteImport
       parentRoute: typeof BibliotecaRoute
     }
+    '/inspecao/$id': {
+      id: '/inspecao/$id'
+      path: '/inspecao/$id'
+      fullPath: '/inspecao/$id'
+      preLoaderRoute: typeof InspecaoIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checklists/$id': {
+      id: '/checklists/$id'
+      path: '/checklists/$id'
+      fullPath: '/checklists/$id'
+      preLoaderRoute: typeof ChecklistsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/biblioteca/historico': {
       id: '/biblioteca/historico'
       path: '/historico'
       fullPath: '/biblioteca/historico'
       preLoaderRoute: typeof BibliotecaHistoricoRouteImport
+      parentRoute: typeof BibliotecaRoute
+    }
+    '/biblioteca/glossario': {
+      id: '/biblioteca/glossario'
+      path: '/glossario'
+      fullPath: '/biblioteca/glossario'
+      preLoaderRoute: typeof BibliotecaGlossarioRouteImport
       parentRoute: typeof BibliotecaRoute
     }
     '/biblioteca/favoritos': {
@@ -191,6 +290,7 @@ interface BibliotecaRouteChildren {
   BibliotecaAdminRoute: typeof BibliotecaAdminRoute
   BibliotecaDocumentosRoute: typeof BibliotecaDocumentosRoute
   BibliotecaFavoritosRoute: typeof BibliotecaFavoritosRoute
+  BibliotecaGlossarioRoute: typeof BibliotecaGlossarioRoute
   BibliotecaHistoricoRoute: typeof BibliotecaHistoricoRoute
   BibliotecaIndexRoute: typeof BibliotecaIndexRoute
   BibliotecaDocDocIdRoute: typeof BibliotecaDocDocIdRoute
@@ -200,6 +300,7 @@ const BibliotecaRouteChildren: BibliotecaRouteChildren = {
   BibliotecaAdminRoute: BibliotecaAdminRoute,
   BibliotecaDocumentosRoute: BibliotecaDocumentosRoute,
   BibliotecaFavoritosRoute: BibliotecaFavoritosRoute,
+  BibliotecaGlossarioRoute: BibliotecaGlossarioRoute,
   BibliotecaHistoricoRoute: BibliotecaHistoricoRoute,
   BibliotecaIndexRoute: BibliotecaIndexRoute,
   BibliotecaDocDocIdRoute: BibliotecaDocDocIdRoute,
@@ -212,6 +313,10 @@ const BibliotecaRouteWithChildren = BibliotecaRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BibliotecaRoute: BibliotecaRouteWithChildren,
+  ChecklistsIdRoute: ChecklistsIdRoute,
+  InspecaoIdRoute: InspecaoIdRoute,
+  InspecaoIndexRoute: InspecaoIndexRoute,
+  RelatoriosIndexRoute: RelatoriosIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

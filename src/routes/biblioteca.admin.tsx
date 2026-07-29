@@ -236,24 +236,33 @@ function AdminPage() {
                   <span className="font-medium">{d.nome}</span>
                   <Badge variant="secondary">{d.categoria}</Badge>
                   {d.orgao && <Badge variant="outline">{d.orgao}</Badge>}
+                  {d.protected && <Badge>Padrão</Badge>}
                   {!d.hasText && <Badge variant="destructive">OCR pendente</Badge>}
                 </div>
                 <div className="text-xs text-muted-foreground">
                   {d.numPages} página(s) · {d.status}
                 </div>
               </div>
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={async () => {
-                  if (confirm(`Excluir "${d.nome}"?`)) {
-                    await deleteDocument(d.id!);
-                    toast.success("Documento excluído.");
-                  }
-                }}
-              >
-                <Trash2 className="h-4 w-4 text-destructive" />
-              </Button>
+              {!d.protected ? (
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={async () => {
+                    if (confirm(`Excluir "${d.nome}"?`)) {
+                      try {
+                        await deleteDocument(d.id!);
+                        toast.success("Documento excluído.");
+                      } catch (e) {
+                        toast.error(e instanceof Error ? e.message : "Falha.");
+                      }
+                    }
+                  }}
+                >
+                  <Trash2 className="h-4 w-4 text-destructive" />
+                </Button>
+              ) : (
+                <span className="text-[10px] text-muted-foreground">protegido</span>
+              )}
             </div>
           ))}
         </div>
