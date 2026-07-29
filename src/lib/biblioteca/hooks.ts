@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { db } from "./db";
 
 export function useOnlineStatus(): boolean {
-  const [online, setOnline] = useState(
-    typeof navigator !== "undefined" ? navigator.onLine : true,
-  );
+  // Always start with `true` to match SSR output; sync to real state after mount.
+  const [online, setOnline] = useState(true);
   useEffect(() => {
+    setOnline(navigator.onLine);
     const up = () => setOnline(true);
     const down = () => setOnline(false);
     window.addEventListener("online", up);
