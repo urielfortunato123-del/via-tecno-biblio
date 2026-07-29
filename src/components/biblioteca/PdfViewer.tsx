@@ -51,6 +51,75 @@ export function PdfViewer({ blob, initialPage = 1, highlight, onPageChange }: Pr
   const [pageText, setPageText] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loadingPage, setLoadingPage] = useState(false);
+  const [fullscreen, setFullscreen] = useState(false);
+  const savedScrollRef = useRef<{ top: number; left: number } | null>(null);
+
+  // Enter/exit fullscreen preserving page, zoom and scroll position.
+  const enterFullscreen = useCallback(() => {
+    const el = containerRef.current;
+    savedScrollRef.current = el
+      ? { top: el.scrollTop, left: el.scrollLeft }
+      : null;
+    setFullscreen(true);
+    if (typeof history !== "undefined") {
+      history.pushState({ pdfFullscreen: true }, "");
+    }
+    // Native Fullscreen API is only a progressive enhancement.
+    const root = rootRef.current;
+    if (root?.requestFullscreen) {
+      root.requestFullscreen().catch(() => {});
+    }
+  }, []);
+
+  const exitFullscreen = useCallback((fromPopstate = false) => {
+    setFullscreen(false);
+    if (typeof document !== "undefined" && document.fullscreenElement) {
+      document.exitFullscreen?.().catch(() => {});
+    }
+    if (!fromPopstate && typeof history !== "undefined") {
+      if (history.state?.pdfFullscreen) history.back();
+    }
+  }, []);
+
+  // Android back button / gesture closes fullscreen first.
+  useEffect(() => {
+    if (!fullscreen) return;
+    const onPop = () => exitFullscreen(true);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") exitFullscreen();
+    };
+    const onFsChange = () => {
+      if (!document.fullscreenElement && fullscreen) {
+        // native exit (system gesture) — keep internal overlay in sync
+      }
+    };
+    window.addEventListener("popstate", onPop);
+    window.addEventListener("keydown", onKey);
+    document.addEventListener("fullscreenchange", onFsChange);
+    return () => {
+      window.removeEventListener("popstate", onPop);
+      window.removeEventListener("keydown", onKey);
+      document.removeEventListener("fullscreenchange", onFsChange);
+    };
+  }, [fullscreen, exitFullscreen]);
+
+  // Restore scroll position after layout switches.
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const saved = savedScrollRef.current;
+    const id = requestAnimationFrame(() => {
+      if (saved) {
+        el.scrollTop = saved.top;
+        el.scrollLeft = saved.left;
+      }
+      savedScrollRef.current = el
+        ? { top: el.scrollTop, left: el.scrollLeft }
+        : null;
+    });
+    return () => cancelAnimationFrame(id);
+  }, [fullscreen]);
+
 
   // Open document once per blob.
   useEffect(() => {
