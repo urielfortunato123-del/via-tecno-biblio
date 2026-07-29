@@ -140,7 +140,7 @@ async def test_route(page: Page, route: str, orientation: str, results: list):
         await page.evaluate(TOGGLE_KB_JS, True)
         await page.wait_for_timeout(250)
         # Nudge browser to scroll focused into view
-        await page.evaluate("document.activeElement && document.activeElement.scrollIntoView({block:'center'})")
+        await page.evaluate(ENSURE_VISIBLE_JS)
         await page.wait_for_timeout(150)
         kb_search = await measure(page)
         await page.screenshot(path=str(SCREENSHOTS / f"kb_search_{orientation}_{route.replace('/', '_')}.png"))
@@ -215,7 +215,7 @@ async def test_orientation_switch(page: Page, results: list):
     # Switch to landscape while keyboard "open"
     await page.set_viewport_size(LANDSCAPE)
     await page.wait_for_timeout(300)
-    await page.evaluate("document.activeElement && document.activeElement.scrollIntoView({block:'center'})")
+    await page.evaluate(ENSURE_VISIBLE_JS)
     await page.wait_for_timeout(150)
     m = await measure(page)
     await page.screenshot(path=str(SCREENSHOTS / "kb_switch_landscape.png"))
