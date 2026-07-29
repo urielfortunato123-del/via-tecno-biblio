@@ -181,6 +181,10 @@ async def test_orientation_switch(page: Page, results: list):
     await page.goto("http://localhost:8080/biblioteca", wait_until="networkidle")
     await page.wait_for_timeout(500)
     await page.add_script_tag(content=FAKE_KB_JS)
+    try:
+        await page.wait_for_selector('input', state='visible', timeout=5000)
+    except Exception:
+        pass
     search = await find_search_input(page)
     if not search:
         results.append({"route": "/biblioteca", "orientation": "switch", "checks": [
