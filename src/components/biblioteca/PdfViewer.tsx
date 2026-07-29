@@ -292,9 +292,28 @@ export function PdfViewer({ blob, initialPage = 1, highlight, onPageChange }: Pr
   }
 
   return (
-    <div className="flex min-w-0 flex-col gap-3">
+    <div
+      ref={rootRef}
+      className={
+        fullscreen
+          ? "fixed inset-0 z-[100] flex min-w-0 flex-col gap-2 bg-background p-2 pt-[max(env(safe-area-inset-top),0.5rem)]"
+          : "flex min-w-0 flex-col gap-3"
+      }
+      style={fullscreen ? { width: "100%", height: "100%" } : undefined}
+    >
+      {fullscreen && (
+        <div className="flex min-w-0 items-center gap-2">
+          <Button size="sm" variant="default" onClick={() => exitFullscreen()}>
+            <ArrowLeft className="mr-1 h-4 w-4" /> Voltar
+          </Button>
+          <span className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
+            Página {page} de {numPages || "…"} · {Math.round(scale * 100)}%
+          </span>
+        </div>
+      )}
       {/* Toolbar */}
       <div className="flex min-w-0 flex-wrap items-center gap-2 rounded-md border bg-card p-2">
+
         <div className="flex items-center gap-1">
           <Button
             size="sm"
