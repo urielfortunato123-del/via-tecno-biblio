@@ -179,6 +179,7 @@ async def test_orientation_switch(page: Page, results: list):
     print("→ orientation_switch")
     await page.set_viewport_size(PORTRAIT)
     await page.goto("http://localhost:8080/biblioteca", wait_until="networkidle")
+    await page.wait_for_timeout(500)
     await page.add_script_tag(content=FAKE_KB_JS)
     search = await find_search_input(page)
     if not search:
