@@ -104,6 +104,7 @@ function SearchPage() {
             <Button
               variant="outline"
               size="icon"
+              className="shrink-0"
               title="Pesquisa por voz (em breve)"
               onClick={() => toast.info("Pesquisa por voz será habilitada em breve.")}
             >
