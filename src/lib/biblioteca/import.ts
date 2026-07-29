@@ -1,6 +1,7 @@
 import { db, type DocRecord } from "./db";
 import { extractAny } from "./pdf-extract";
 import { invalidateIndex } from "./search";
+import { findExistingDoc } from "./dedupe";
 
 export interface ImportMetadata {
   nome: string;
@@ -14,10 +15,32 @@ export interface ImportMetadata {
   observacoes?: string;
 }
 
+async function hashFile(file: File): Promise<string | undefined> {
+  try {
+    if (typeof crypto === "undefined" || !crypto.subtle) return undefined;
+    const buf = await file.arrayBuffer();
+    const digest = await crypto.subtle.digest("SHA-256", buf);
+    return Array.from(new Uint8Array(digest))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+  } catch {
+    return undefined;
+  }
+}
+
 export async function importDocument(file: File, meta: ImportMetadata): Promise<number> {
+  const pdfHash = await hashFile(file);
   const extracted = await extractAny(file);
   const now = Date.now();
-  const rec: DocRecord = {
+
+  // Duplicate guard: hash → url → fileName + page count → internal id.
+  const existing = await findExistingDoc({
+    fileName: file.name,
+    pdfHash,
+    numPages: extracted.numPages,
+  });
+
+  const base = {
     nome: meta.nome.trim() || file.name,
     descricao: meta.descricao,
     categoria: meta.categoria,
@@ -30,10 +53,24 @@ export async function importDocument(file: File, meta: ImportMetadata): Promise<
     mime: file.type || "application/octet-stream",
     fileName: file.name,
     numPages: extracted.numPages,
-    createdAt: now,
     updatedAt: now,
     hasText: extracted.hasText,
+    pdfHash,
   };
+
+  if (existing?.id != null) {
+    // Only refresh metadata — never create a second card for the same file.
+    await db.docs.update(existing.id, base);
+    await db.blobs.put({ docId: existing.id, blob: file });
+    await db.pages.where("docId").equals(existing.id).delete();
+    await db.pages.bulkAdd(
+      extracted.pages.map((p) => ({ docId: existing.id!, page: p.page, text: p.text })),
+    );
+    invalidateIndex();
+    return existing.id;
+  }
+
+  const rec: DocRecord = { ...base, createdAt: now } as DocRecord;
   const docId = await db.docs.add(rec);
   await db.blobs.put({ docId, blob: file });
   await db.pages.bulkAdd(
@@ -42,6 +79,7 @@ export async function importDocument(file: File, meta: ImportMetadata): Promise<
   invalidateIndex();
   return docId;
 }
+
 
 export async function deleteDocument(docId: number): Promise<void> {
   const rec = await db.docs.get(docId);
