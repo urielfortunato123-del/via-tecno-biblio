@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: fiscalizacao-rodoviaria-biblioteca
+    runtime: node
+    plan: standard
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: RENDER
+        value: "true"
+      - key: NITRO_PRESET
+        value: node-server
