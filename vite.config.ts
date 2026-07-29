@@ -1,18 +1,53 @@
-// @lovable.dev/vite-tanstack-config already includes the following — do NOT add them manually
-// or the app will break with duplicate plugins:
-//   - TanStack devtools (dev-only, first), tanstackStart, viteReact, tailwindcss, tsConfigPaths,
-//     nitro (build-only using cloudflare as a default target), VITE_* env injection, @ path alias,
-//     React/TanStack dedupe, error logger plugins, and sandbox detection (port/host/strictPort).
-// You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
-import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { defineConfig } from "vite";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
+import react from "@vitejs/plugin-react";
+import tsconfigPaths from "vite-tsconfig-paths";
+import tailwindcss from "@tailwindcss/vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import { nitro } from "nitro/vite";
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const isRender = !!process.env.RENDER || process.env.NITRO_PRESET === "node-server";
+
+// Portable configuration — no dependency on private Lovable packages.
+// Works locally (Lovable dev) and on external hosts (Render, etc.).
 export default defineConfig({
-  tanstackStart: {
-    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    // nitro/vite builds from this
-    server: { entry: "server" },
+  plugins: [
+    tsconfigPaths({ projects: ["./tsconfig.json"] }),
+    tailwindcss(),
+    tanstackStart(),
+    react(),
+    nitro({
+      preset: isRender ? "node-server" : "cloudflare-module",
+      output: {
+        dir: path.resolve(__dirname, "dist"),
+        serverDir: path.resolve(__dirname, "dist/server"),
+        publicDir: path.resolve(__dirname, "dist/client"),
+      },
+    }),
+  ],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+    },
+    dedupe: ["react", "react-dom", "@tanstack/react-router", "@tanstack/react-start"],
   },
-  // Use the Node.js server preset for Render deployments;
-  // keep the Lovable default (Cloudflare) when not on Render.
-  nitro: { preset: process.env.RENDER ? "node-server" : undefined },
+  server: {
+    host: true,
+    port: 8080,
+    strictPort: true,
+  },
+  environments: {
+    server: {
+      build: {
+        rollupOptions: {
+          input: path.resolve(__dirname, "src/server.ts"),
+        },
+        rolldownOptions: {
+          input: path.resolve(__dirname, "src/server.ts"),
+        },
+      },
+    },
+  },
 });
