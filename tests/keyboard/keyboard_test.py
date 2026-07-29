@@ -89,15 +89,22 @@ async def measure(page: Page):
 
 async def find_search_input(page: Page):
     # Try common selectors
-    for sel in [
-        'input[type="search"]',
-        'input[placeholder*="uscar" i]',
-        'input[placeholder*="esquis" i]',
-        'input[placeholder*="ermo" i]',
-        'input[placeholder*="onsult" i]',
-        'input[type="text"]',
-        'input:not([type="checkbox"]):not([type="radio"]):not([type="file"])',
-    ]:
+ENSURE_VISIBLE_JS = """
+() => {
+  const el = document.activeElement;
+  if (!el || el === document.body) return;
+  const r = el.getBoundingClientRect();
+  const kbHeight = window.__kbOpen ? window.innerHeight - window.visualViewport.height : 0;
+  const visibleBottom = window.innerHeight - kbHeight;
+  const headerH = 56;
+  const margin = 8;
+  let delta = 0;
+  if (r.bottom > visibleBottom - margin) delta = r.bottom - (visibleBottom - margin);
+  else if (r.top < headerH + margin) delta = r.top - (headerH + margin);
+  if (delta !== 0) window.scrollBy({ top: delta });
+}
+"""
+
         loc = page.locator(sel).first
         try:
             if await loc.count() > 0:
