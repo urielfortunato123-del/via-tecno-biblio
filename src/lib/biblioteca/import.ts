@@ -44,6 +44,10 @@ export async function importDocument(file: File, meta: ImportMetadata): Promise<
 }
 
 export async function deleteDocument(docId: number): Promise<void> {
+  const rec = await db.docs.get(docId);
+  if (rec?.protected) {
+    throw new Error("Documento protegido. Apenas o administrador pode substituir.");
+  }
   await db.transaction("rw", db.docs, db.pages, db.blobs, db.favorites, async () => {
     await db.docs.delete(docId);
     await db.pages.where("docId").equals(docId).delete();

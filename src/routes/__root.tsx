@@ -14,6 +14,8 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Toaster } from "@/components/ui/sonner";
+import { SmrBootstrap } from "@/components/SmrBootstrap";
+import { InspectionProvider } from "@/lib/biblioteca/inspection-context";
 
 function NotFoundComponent() {
   return (
@@ -127,22 +129,25 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SidebarProvider>
-        <div className="flex min-h-screen w-full">
-          <AppSidebar />
-          <div className="flex flex-1 flex-col">
-            <header className="sticky top-0 z-20 flex h-12 items-center gap-2 border-b bg-background/80 px-3 backdrop-blur">
-              <SidebarTrigger />
-              <span className="text-sm font-medium">Via Norma</span>
-            </header>
-            <main className="flex-1">
-              {/* Required: nested routes render here. */}
-              <Outlet />
-            </main>
+      <InspectionProvider>
+        <SidebarProvider>
+          <div className="flex min-h-screen w-full">
+            <AppSidebar />
+            <div className="flex flex-1 flex-col">
+              <header className="sticky top-0 z-20 flex h-12 items-center gap-2 border-b bg-background/80 px-3 backdrop-blur">
+                <SidebarTrigger />
+                <span className="text-sm font-medium">Via Norma</span>
+              </header>
+              <main className="flex-1">
+                {/* Required: nested routes render here. */}
+                <Outlet />
+              </main>
+            </div>
           </div>
-        </div>
-        <Toaster richColors position="top-right" />
-      </SidebarProvider>
+          <Toaster richColors position="top-right" />
+          <SmrBootstrap />
+        </SidebarProvider>
+      </InspectionProvider>
     </QueryClientProvider>
   );
 }

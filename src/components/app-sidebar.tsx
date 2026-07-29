@@ -7,6 +7,9 @@ import {
   History,
   Settings,
   FolderOpen,
+  ClipboardList,
+  FileText,
+  Library,
 } from "lucide-react";
 import {
   Sidebar,
@@ -23,11 +26,14 @@ import { useOnlineStatus } from "@/lib/biblioteca/hooks";
 
 const mainItems = [
   { title: "Início", url: "/", icon: Home },
+  { title: "Inspeções", url: "/inspecao", icon: ClipboardList },
+  { title: "Relatórios", url: "/relatorios", icon: FileText },
 ];
 
 const bibItems = [
   { title: "Pesquisar", url: "/biblioteca", icon: Search },
   { title: "Documentos", url: "/biblioteca/documentos", icon: FolderOpen },
+  { title: "Glossário", url: "/biblioteca/glossario", icon: Library },
   { title: "Favoritos", url: "/biblioteca/favoritos", icon: Star },
   { title: "Histórico", url: "/biblioteca/historico", icon: History },
   { title: "Administração", url: "/biblioteca/admin", icon: Settings },
