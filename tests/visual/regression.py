@@ -72,13 +72,27 @@ async def measure_overflow(page: Any) -> dict[str, Any]:
           const docSw = document.documentElement.scrollWidth;
           const docCw = document.documentElement.clientWidth;
           const bodySw = document.body.scrollWidth;
+          const isHScrollable = (el) => {
+            const s = getComputedStyle(el);
+            const ov = s.overflowX;
+            return (ov === 'auto' || ov === 'scroll') && el.scrollWidth > el.clientWidth + 1;
+          };
+          const insideHScroll = (el) => {
+            let p = el.parentElement;
+            while (p && p !== document.documentElement) {
+              if (isHScrollable(p)) return true;
+              p = p.parentElement;
+            }
+            return false;
+          };
           const overflowing = [];
           const all = document.querySelectorAll('body *');
           for (const el of all) {
             const r = el.getBoundingClientRect();
-            // Ignora elementos escondidos.
             if (r.width === 0 || r.height === 0) continue;
-            // Se ultrapassa a borda direita do viewport de forma expressiva:
+            // Ignora elementos dentro de um container com rolagem horizontal
+            // intencional (ex.: tabs roláveis, carrosséis).
+            if (insideHScroll(el)) continue;
             if (r.right > docCw + 1) {
               overflowing.push({
                 tag: el.tagName.toLowerCase(),
