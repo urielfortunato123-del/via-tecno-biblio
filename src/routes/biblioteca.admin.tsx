@@ -88,12 +88,12 @@ function AdminPage() {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
-      <Card className="p-4">
+    <div className="grid min-w-0 gap-6 lg:grid-cols-2">
+      <Card className="min-w-0 p-4">
         <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
           <Upload className="h-4 w-4" /> Importar documento
         </h2>
-        <div className="grid gap-3">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-3">
           <div>
             <Label htmlFor="arq">Arquivo (PDF ou TXT)</Label>
             <Input
@@ -125,8 +125,8 @@ function AdminPage() {
               rows={2}
             />
           </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
+          <div className="grid grid-cols-1 gap-3 min-[380px]:grid-cols-[repeat(2,minmax(0,1fr))]">
+            <div className="min-w-0">
               <Label>Categoria *</Label>
               <Select value={categoria} onValueChange={setCategoria}>
                 <SelectTrigger>
@@ -155,8 +155,8 @@ function AdminPage() {
               </Select>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-3">
-            <div>
+          <div className="grid grid-cols-1 gap-3 min-[380px]:grid-cols-[repeat(2,minmax(0,1fr))] sm:grid-cols-[repeat(3,minmax(0,1fr))]">
+            <div className="min-w-0">
               <Label htmlFor="orgao">Órgão</Label>
               <Input
                 id="orgao"
@@ -192,7 +192,7 @@ function AdminPage() {
               rows={2}
             />
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Button onClick={handleImport} disabled={importing}>
               {importing ? "Importando…" : "Importar"}
             </Button>
@@ -213,7 +213,7 @@ function AdminPage() {
         </div>
       </Card>
 
-      <Card className="p-4">
+      <Card className="min-w-0 p-4">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-lg font-semibold">Documentos cadastrados</h2>
           <span className="text-xs text-muted-foreground">
@@ -225,7 +225,7 @@ function AdminPage() {
             Nenhum documento importado ainda.
           </p>
         )}
-        <div className="grid gap-2">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-2">
           {docs?.map((d) => (
             <div
               key={d.id}
