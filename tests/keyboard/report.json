@@ -1,0 +1,346 @@
+[
+  {
+    "route": "/biblioteca",
+    "orientation": "portrait",
+    "checks": [
+      {
+        "name": "search:no_overflow",
+        "ok": true,
+        "detail": "sw=390 cw=390"
+      },
+      {
+        "name": "search:visible_above_keyboard",
+        "ok": true,
+        "detail": "bottom=230 visible=464"
+      },
+      {
+        "name": "select:no_overflow",
+        "ok": true,
+        "detail": "sw=390 cw=390"
+      },
+      {
+        "name": "select:listbox_above_keyboard",
+        "ok": true,
+        "detail": "lb_bottom=238 visible=464"
+      }
+    ],
+    "kb_search": {
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "innerWidth": 390,
+      "vvHeight": 464,
+      "visibleBottom": 464,
+      "focusedTag": "INPUT",
+      "focusedRect": {
+        "top": 186,
+        "bottom": 230,
+        "left": 29,
+        "right": 361
+      }
+    },
+    "kb_select": {
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "innerWidth": 390,
+      "vvHeight": 464,
+      "visibleBottom": 464,
+      "focusedTag": "DIV",
+      "focusedRect": {
+        "top": 11,
+        "bottom": 43,
+        "left": 34,
+        "right": 314
+      },
+      "trigger_bottom": 278,
+      "listbox_bottom": 238
+    }
+  },
+  {
+    "route": "/biblioteca/documentos",
+    "orientation": "portrait",
+    "checks": [],
+    "kb_search": null,
+    "kb_select": null
+  },
+  {
+    "route": "/biblioteca/favoritos",
+    "orientation": "portrait",
+    "checks": [],
+    "kb_search": null,
+    "kb_select": null
+  },
+  {
+    "route": "/biblioteca/historico",
+    "orientation": "portrait",
+    "checks": [],
+    "kb_search": null,
+    "kb_select": null
+  },
+  {
+    "route": "/biblioteca/glossario",
+    "orientation": "portrait",
+    "checks": [
+      {
+        "name": "search:no_overflow",
+        "ok": true,
+        "detail": "sw=390 cw=390"
+      },
+      {
+        "name": "search:visible_above_keyboard",
+        "ok": true,
+        "detail": "bottom=282 visible=464"
+      }
+    ],
+    "kb_search": {
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "innerWidth": 390,
+      "vvHeight": 464,
+      "visibleBottom": 464,
+      "focusedTag": "INPUT",
+      "focusedRect": {
+        "top": 246,
+        "bottom": 282,
+        "left": 41,
+        "right": 349
+      }
+    },
+    "kb_select": null
+  },
+  {
+    "route": "/biblioteca/admin",
+    "orientation": "portrait",
+    "checks": [
+      {
+        "name": "search:no_overflow",
+        "ok": true,
+        "detail": "sw=390 cw=390"
+      },
+      {
+        "name": "search:visible_above_keyboard",
+        "ok": true,
+        "detail": "bottom=358 visible=464"
+      },
+      {
+        "name": "select:no_overflow",
+        "ok": true,
+        "detail": "sw=390 cw=390"
+      },
+      {
+        "name": "select:listbox_above_keyboard",
+        "ok": true,
+        "detail": "lb_bottom=400 visible=464"
+      }
+    ],
+    "kb_search": {
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "innerWidth": 390,
+      "vvHeight": 464,
+      "visibleBottom": 464,
+      "focusedTag": "INPUT",
+      "focusedRect": {
+        "top": 322,
+        "bottom": 358,
+        "left": 29,
+        "right": 361
+      }
+    },
+    "kb_select": {
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "innerWidth": 390,
+      "vvHeight": 464,
+      "visibleBottom": 464,
+      "focusedTag": "DIV",
+      "focusedRect": {
+        "top": 11,
+        "bottom": 43,
+        "left": 34,
+        "right": 246.109375
+      },
+      "trigger_bottom": 532,
+      "listbox_bottom": 400
+    }
+  },
+  {
+    "route": "/biblioteca",
+    "orientation": "landscape",
+    "checks": [
+      {
+        "name": "search:no_overflow",
+        "ok": true,
+        "detail": "sw=844 cw=844"
+      },
+      {
+        "name": "search:visible_above_keyboard",
+        "ok": true,
+        "detail": "bottom=206 visible=214"
+      },
+      {
+        "name": "select:no_overflow",
+        "ok": true,
+        "detail": "sw=844 cw=844"
+      },
+      {
+        "name": "select:listbox_above_keyboard",
+        "ok": true,
+        "detail": "lb_bottom=173 visible=214"
+      }
+    ],
+    "kb_search": {
+      "scrollWidth": 844,
+      "clientWidth": 844,
+      "innerWidth": 844,
+      "vvHeight": 214,
+      "visibleBottom": 214,
+      "focusedTag": "INPUT",
+      "focusedRect": {
+        "top": 162,
+        "bottom": 206,
+        "left": 289,
+        "right": 531
+      }
+    },
+    "kb_select": {
+      "scrollWidth": 844,
+      "clientWidth": 844,
+      "innerWidth": 844,
+      "vvHeight": 214,
+      "visibleBottom": 214,
+      "focusedTag": "DIV",
+      "focusedRect": {
+        "top": 11,
+        "bottom": 43,
+        "left": 548,
+        "right": 764
+      },
+      "trigger_bottom": 198,
+      "listbox_bottom": 173
+    }
+  },
+  {
+    "route": "/biblioteca/documentos",
+    "orientation": "landscape",
+    "checks": [],
+    "kb_search": null,
+    "kb_select": null
+  },
+  {
+    "route": "/biblioteca/favoritos",
+    "orientation": "landscape",
+    "checks": [],
+    "kb_search": null,
+    "kb_select": null
+  },
+  {
+    "route": "/biblioteca/historico",
+    "orientation": "landscape",
+    "checks": [],
+    "kb_search": null,
+    "kb_select": null
+  },
+  {
+    "route": "/biblioteca/glossario",
+    "orientation": "landscape",
+    "checks": [
+      {
+        "name": "search:no_overflow",
+        "ok": true,
+        "detail": "sw=844 cw=844"
+      },
+      {
+        "name": "search:visible_above_keyboard",
+        "ok": true,
+        "detail": "bottom=206 visible=214"
+      }
+    ],
+    "kb_search": {
+      "scrollWidth": 844,
+      "clientWidth": 844,
+      "innerWidth": 844,
+      "vvHeight": 214,
+      "visibleBottom": 214,
+      "focusedTag": "INPUT",
+      "focusedRect": {
+        "top": 170,
+        "bottom": 206,
+        "left": 301,
+        "right": 799
+      }
+    },
+    "kb_select": null
+  },
+  {
+    "route": "/biblioteca/admin",
+    "orientation": "landscape",
+    "checks": [
+      {
+        "name": "search:no_overflow",
+        "ok": true,
+        "detail": "sw=844 cw=844"
+      },
+      {
+        "name": "search:visible_above_keyboard",
+        "ok": true,
+        "detail": "bottom=206 visible=214"
+      },
+      {
+        "name": "select:no_overflow",
+        "ok": true,
+        "detail": "sw=844 cw=844"
+      },
+      {
+        "name": "select:listbox_above_keyboard",
+        "ok": true,
+        "detail": "lb_bottom=173 visible=214"
+      }
+    ],
+    "kb_search": {
+      "scrollWidth": 844,
+      "clientWidth": 844,
+      "innerWidth": 844,
+      "vvHeight": 214,
+      "visibleBottom": 214,
+      "focusedTag": "INPUT",
+      "focusedRect": {
+        "top": 170,
+        "bottom": 206,
+        "left": 289,
+        "right": 811
+      }
+    },
+    "kb_select": {
+      "scrollWidth": 844,
+      "clientWidth": 844,
+      "innerWidth": 844,
+      "vvHeight": 214,
+      "visibleBottom": 214,
+      "focusedTag": "DIV",
+      "focusedRect": {
+        "top": 11,
+        "bottom": 43,
+        "left": 294,
+        "right": 541
+      },
+      "trigger_bottom": 326,
+      "listbox_bottom": 173
+    }
+  },
+  {
+    "route": "/biblioteca",
+    "orientation": "switch",
+    "checks": [
+      {
+        "name": "switch:no_overflow",
+        "ok": true,
+        "detail": "sw=844 cw=844"
+      },
+      {
+        "name": "switch:focus_visible",
+        "ok": true,
+        "detail": "bottom=206 visible=214"
+      }
+    ]
+  }
+]
