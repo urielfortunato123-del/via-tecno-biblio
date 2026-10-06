@@ -1,0 +1,348 @@
+name: ViaCerta Native Shell D21.16
+
+on:
+  push:
+    branches: [viacerta-native-shell-d2116]
+    paths:
+      - '.github/workflows/viacerta-native-shell-d2116.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Android SDK 36
+        run: |
+          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Create native Capacitor shell
+        run: |
+          set -euxo pipefail
+          rm -rf /tmp/vc
+          mkdir -p /tmp/vc/www
+          cd /tmp/vc
+          cat > package.json <<'JSON'
+          {
+            "name": "viacerta-native-shell-d2116",
+            "version": "2.46.0",
+            "private": true,
+            "dependencies": {
+              "@capacitor/core": "8.5.2",
+              "@capacitor/android": "8.5.2",
+              "@capacitor/filesystem": "8.1.4",
+              "@capacitor/geolocation": "8.2.2",
+              "@capawesome/capacitor-maplibre": "0.2.0"
+            },
+            "devDependencies": {
+              "@capacitor/cli": "8.5.2"
+            }
+          }
+          JSON
+          cat > capacitor.config.json <<'JSON'
+          {
+            "appId": "com.viacerta.devx5.lite",
+            "appName": "ViaCerta Lite DEV",
+            "webDir": "www"
+          }
+          JSON
+          cat > www/index.html <<'HTML'
+          <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body>ViaCerta native shell D21.16</body></html>
+          HTML
+          npm install --no-audit --no-fund
+          npx cap add android
+          npx cap sync android
+
+      - name: Add native offline corridor bridge
+        run: |
+          set -euxo pipefail
+          cd /tmp/vc
+          PKG="android/app/src/main/java/com/viacerta/devx5/lite"
+          mkdir -p "$PKG"
+          cat > "$PKG/MainActivity.java" <<'JAVA'
+          package com.viacerta.devx5.lite;
+
+          import android.os.Bundle;
+          import com.getcapacitor.BridgeActivity;
+
+          public class MainActivity extends BridgeActivity {
+              @Override
+              public void onCreate(Bundle savedInstanceState) {
+                  registerPlugin(ViaCertaOfflineMapPlugin.class);
+                  super.onCreate(savedInstanceState);
+              }
+          }
+          JAVA
+
+          cat > "$PKG/ViaCertaOfflineMapPlugin.java" <<'JAVA'
+          package com.viacerta.devx5.lite;
+
+          import androidx.annotation.NonNull;
+          import com.getcapacitor.JSArray;
+          import com.getcapacitor.JSObject;
+          import com.getcapacitor.Plugin;
+          import com.getcapacitor.PluginCall;
+          import com.getcapacitor.PluginMethod;
+          import com.getcapacitor.annotation.CapacitorPlugin;
+          import java.nio.charset.StandardCharsets;
+          import java.util.Arrays;
+          import java.util.Map;
+          import java.util.concurrent.ConcurrentHashMap;
+          import org.maplibre.android.geometry.LatLng;
+          import org.maplibre.android.geometry.LatLngBounds;
+          import org.maplibre.android.offline.OfflineManager;
+          import org.maplibre.android.offline.OfflineRegion;
+          import org.maplibre.android.offline.OfflineRegionError;
+          import org.maplibre.android.offline.OfflineRegionStatus;
+          import org.maplibre.android.offline.OfflineTilePyramidRegionDefinition;
+
+          @CapacitorPlugin(name = "ViaCertaOfflineMap")
+          public class ViaCertaOfflineMapPlugin extends Plugin {
+              private final Map<Long, OfflineRegion> active = new ConcurrentHashMap<>();
+              private OfflineManager manager;
+
+              @Override
+              public void load() {
+                  super.load();
+                  manager = OfflineManager.getInstance(getContext());
+                  try {
+                      manager.setMaximumAmbientCacheSize(256L * 1024L * 1024L, null);
+                      manager.setOfflineMapboxTileCountLimit(20000L);
+                  } catch (Throwable ignored) {}
+              }
+
+              @PluginMethod
+              public void prefetchRegion(PluginCall call) {
+                  final double north = number(call, "north");
+                  final double east = number(call, "east");
+                  final double south = number(call, "south");
+                  final double west = number(call, "west");
+                  final double minZoom = number(call, "minZoom", 10d);
+                  final double maxZoom = number(call, "maxZoom", 16d);
+                  final String styleUrl = string(call, "styleUrl", "https://tiles.openfreemap.org/styles/liberty");
+                  final String key = string(call, "key", String.format(java.util.Locale.US, "%.3f,%.3f", (north + south) / 2d, (east + west) / 2d));
+
+                  if (!(north > south) || !(east > west) || north > 85d || south < -85d) {
+                      call.reject("Limites inválidos para cache offline");
+                      return;
+                  }
+
+                  manager.listOfflineRegions(new OfflineManager.ListOfflineRegionsCallback() {
+                      @Override public void onList(OfflineRegion[] regions) {
+                          if (regions != null) {
+                              for (OfflineRegion region : regions) {
+                                  String meta = new String(region.getMetadata(), StandardCharsets.UTF_8);
+                                  if (meta.contains("\"key\":\"" + key.replace("\"", "") + "\"")) {
+                                      active.put(region.getId(), region);
+                                      attachObserver(region, key);
+                                      region.setDownloadState(OfflineRegion.STATE_ACTIVE);
+                                      JSObject ret = new JSObject();
+                                      ret.put("ok", true);
+                                      ret.put("regionId", region.getId());
+                                      ret.put("existing", true);
+                                      ret.put("key", key);
+                                      call.resolve(ret);
+                                      return;
+                                  }
+                              }
+                              trimOld(regions, 6);
+                          }
+                          createRegion(call, north, east, south, west, minZoom, maxZoom, styleUrl, key);
+                      }
+                      @Override public void onError(String error) {
+                          createRegion(call, north, east, south, west, minZoom, maxZoom, styleUrl, key);
+                      }
+                  });
+              }
+
+              private void createRegion(
+                  PluginCall call, double north, double east, double south, double west,
+                  double minZoom, double maxZoom, String styleUrl, String key
+              ) {
+                  LatLngBounds bounds = new LatLngBounds.Builder()
+                      .include(new LatLng(south, west))
+                      .include(new LatLng(north, east))
+                      .build();
+                  float ratio = Math.min(2.0f, Math.max(1.0f, getContext().getResources().getDisplayMetrics().density));
+                  OfflineTilePyramidRegionDefinition def =
+                      new OfflineTilePyramidRegionDefinition(styleUrl, bounds, minZoom, maxZoom, ratio, false);
+                  String metaText = "{\"key\":\"" + key.replace("\"", "") + "\",\"createdAt\":" + System.currentTimeMillis() + "}";
+                  manager.createOfflineRegion(def, metaText.getBytes(StandardCharsets.UTF_8), new OfflineManager.CreateOfflineRegionCallback() {
+                      @Override public void onCreate(OfflineRegion region) {
+                          active.put(region.getId(), region);
+                          attachObserver(region, key);
+                          region.setDownloadState(OfflineRegion.STATE_ACTIVE);
+                          JSObject ret = new JSObject();
+                          ret.put("ok", true);
+                          ret.put("regionId", region.getId());
+                          ret.put("existing", false);
+                          ret.put("key", key);
+                          call.resolve(ret);
+                      }
+                      @Override public void onError(String error) {
+                          call.reject("Falha ao criar corredor offline: " + error);
+                      }
+                  });
+              }
+
+              private void attachObserver(OfflineRegion region, String key) {
+                  region.setDeliverInactiveMessages(true);
+                  region.setObserver(new OfflineRegion.OfflineRegionObserver() {
+                      @Override public void onStatusChanged(@NonNull OfflineRegionStatus status) {
+                          JSObject ev = new JSObject();
+                          ev.put("regionId", region.getId());
+                          ev.put("key", key);
+                          ev.put("completed", status.getCompletedResourceCount());
+                          ev.put("required", status.getRequiredResourceCount());
+                          ev.put("bytes", status.getCompletedResourceSize());
+                          ev.put("precise", status.isRequiredResourceCountPrecise());
+                          ev.put("complete", status.isComplete());
+                          notifyListeners("offlineProgress", ev);
+                          if (status.isComplete()) {
+                              region.setDownloadState(OfflineRegion.STATE_INACTIVE);
+                              active.remove(region.getId());
+                          }
+                      }
+                      @Override public void onError(@NonNull OfflineRegionError error) {
+                          JSObject ev = new JSObject();
+                          ev.put("regionId", region.getId());
+                          ev.put("key", key);
+                          ev.put("error", error.getMessage());
+                          notifyListeners("offlineError", ev);
+                      }
+                      @Override public void mapboxTileCountLimitExceeded(long limit) {
+                          JSObject ev = new JSObject();
+                          ev.put("regionId", region.getId());
+                          ev.put("key", key);
+                          ev.put("error", "tile_limit");
+                          ev.put("limit", limit);
+                          notifyListeners("offlineError", ev);
+                      }
+                  });
+              }
+
+              private void trimOld(OfflineRegion[] regions, int keep) {
+                  if (regions == null || regions.length < keep) return;
+                  OfflineRegion[] copy = regions.clone();
+                  Arrays.sort(copy, (a, b) -> Long.compare(a.getId(), b.getId()));
+                  int remove = Math.max(0, copy.length - keep + 1);
+                  for (int i = 0; i < remove; i++) {
+                      OfflineRegion r = copy[i];
+                      if (active.containsKey(r.getId())) continue;
+                      try {
+                          r.delete(new OfflineRegion.OfflineRegionDeleteCallback() {
+                              @Override public void onDelete() {}
+                              @Override public void onError(String error) {}
+                          });
+                      } catch (Throwable ignored) {}
+                  }
+              }
+
+              @PluginMethod
+              public void listRegions(PluginCall call) {
+                  manager.listOfflineRegions(new OfflineManager.ListOfflineRegionsCallback() {
+                      @Override public void onList(OfflineRegion[] regions) {
+                          JSArray arr = new JSArray();
+                          if (regions != null) {
+                              for (OfflineRegion r : regions) {
+                                  JSObject row = new JSObject();
+                                  row.put("id", r.getId());
+                                  row.put("metadata", new String(r.getMetadata(), StandardCharsets.UTF_8));
+                                  arr.put(row);
+                              }
+                          }
+                          JSObject out = new JSObject();
+                          out.put("regions", arr);
+                          call.resolve(out);
+                      }
+                      @Override public void onError(String error) { call.reject(error); }
+                  });
+              }
+
+              @PluginMethod
+              public void setAmbientCacheLimit(PluginCall call) {
+                  long mb = Math.max(64L, Math.min(1024L, Math.round(number(call, "megabytes", 256d))));
+                  manager.setMaximumAmbientCacheSize(mb * 1024L * 1024L, new OfflineManager.FileSourceCallback() {
+                      @Override public void onSuccess() {
+                          JSObject out = new JSObject();
+                          out.put("megabytes", mb);
+                          call.resolve(out);
+                      }
+                      @Override public void onError(String message) { call.reject(message); }
+                  });
+              }
+
+              private static String string(PluginCall call, String key, String fallback) {
+                  String v = call.getString(key);
+                  return v == null || v.isEmpty() ? fallback : v;
+              }
+              private static double number(PluginCall call, String key) {
+                  Double v = call.getDouble(key);
+                  if (v == null || !Double.isFinite(v)) throw new IllegalArgumentException("Campo numérico ausente: " + key);
+                  return v;
+              }
+              private static double number(PluginCall call, String key, double fallback) {
+                  Double v = call.getDouble(key);
+                  return v == null || !Double.isFinite(v) ? fallback : v;
+              }
+          }
+          JAVA
+
+      - name: Configure arm64 release identity
+        run: |
+          set -euxo pipefail
+          cd /tmp/vc
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('android/app/build.gradle')
+          s=p.read_text()
+          s=re.sub(r'versionCode\s+\d+', 'versionCode 200075', s, count=1)
+          s=re.sub(r'versionName\s+"[^"]+"', 'versionName "02.46"', s, count=1)
+          marker='dependencies {'
+          s=s.replace(marker, marker+'\n    implementation "org.maplibre.gl:android-sdk-vulkan-opengl:13.5.0"', 1)
+          # Poco X5 DEV is arm64; reduce APK size and native footprint.
+          s=s.replace('defaultConfig {', 'defaultConfig {\n        ndk { abiFilters "arm64-v8a" }', 1)
+          p.write_text(s)
+          PY
+          grep -nE 'applicationId|versionCode|versionName|abiFilters|android-sdk-vulkan-opengl' android/app/build.gradle
+
+      - name: Build and 16K zipalign unsigned APK
+        run: |
+          set -euxo pipefail
+          cd /tmp/vc/android
+          chmod +x gradlew
+          ./gradlew :app:assembleRelease --no-daemon --stacktrace
+          IN=app/build/outputs/apk/release/app-release-unsigned.apk
+          OUT=/tmp/ViaCerta_Native_D21.16_ARM64_ALIGNED_UNSIGNED.apk
+          "$ANDROID_HOME/build-tools/36.0.0/zipalign" -P 16 -f -v 4 "$IN" "$OUT"
+          "$ANDROID_HOME/build-tools/36.0.0/zipalign" -P 16 -c -v 4 "$OUT"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt2" dump badging "$OUT" | tee /tmp/badging.txt
+          grep -q "package: name='com.viacerta.devx5.lite' versionCode='200075' versionName='02.46'" /tmp/badging.txt
+          unzip -t "$OUT" >/dev/null
+          ls -lh "$OUT"
+
+      - name: Upload shell
+        uses: actions/upload-artifact@v4
+        with:
+          name: ViaCerta-Native-D21.16-ARM64-unsigned
+          path: /tmp/ViaCerta_Native_D21.16_ARM64_ALIGNED_UNSIGNED.apk
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
