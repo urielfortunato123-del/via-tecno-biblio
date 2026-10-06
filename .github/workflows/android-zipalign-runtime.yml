@@ -1,0 +1,30 @@
+name: Android zipalign runtime
+
+on:
+  push:
+    branches: [viacerta-native-shell-d2116]
+    paths:
+      - '.github/workflows/android-zipalign-runtime.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tools:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install build tools
+        run: |
+          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "build-tools;36.0.0"
+          mkdir -p /tmp/zipalign-runtime/lib64
+          cp "$ANDROID_HOME/build-tools/36.0.0/zipalign" /tmp/zipalign-runtime/
+          cp "$ANDROID_HOME/build-tools/36.0.0/lib64/libc++.so" /tmp/zipalign-runtime/lib64/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-zipalign-runtime-36
+          path: /tmp/zipalign-runtime
+          retention-days: 1
+          compression-level: 0
