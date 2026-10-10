@@ -1,0 +1,36 @@
+name: viacerta-android-tools-temp
+on:
+  push:
+    branches: [ "viacerta-android-tools-temp" ]
+permissions:
+  contents: write
+jobs:
+  pack:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: viacerta-android-tools-temp
+      - name: Prepare tools
+        shell: bash
+        run: |
+          set -euxo pipefail
+          rm -rf .viacerta-tools
+          mkdir -p .viacerta-tools/build-tools .viacerta-tools/platform
+          BT="$ANDROID_HOME/build-tools/35.0.0"
+          if [ ! -d "$BT" ]; then
+            BT="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)"
+          fi
+          cp "$BT/d8" .viacerta-tools/build-tools/
+          cp "$BT/lib/d8.jar" .viacerta-tools/build-tools/
+          cp "$BT/apksigner" .viacerta-tools/build-tools/
+          cp "$BT/lib/apksigner.jar" .viacerta-tools/build-tools/
+          cp "$BT/zipalign" .viacerta-tools/build-tools/
+          cp "$ANDROID_HOME/platforms/android-35/android.jar" .viacerta-tools/platform/ || cp "$(find "$ANDROID_HOME/platforms" -name android.jar | sort -V | tail -1)" .viacerta-tools/platform/android.jar
+          curl -L --fail -o .viacerta-tools/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v2.10.0/apktool_2.10.0.jar
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f .viacerta-tools
+          git commit -m "tools: add temporary Android build toolchain"
+          git push origin HEAD:viacerta-android-tools-temp
